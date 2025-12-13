@@ -1,0 +1,290 @@
+/* Modern Form Styling */
+
+.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 249, 255, 0.95) 100%
+  );
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  max-width: 600px;
+  margin: 30px auto;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.label-icon {
+  font-size: 20px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.form-group:hover .label-icon {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.form-input,
+.form-select {
+  padding: 14px 18px;
+  border: 2px solid #d0d0d0;
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #ffffff;
+  color: #1a1a1a;
+  letter-spacing: 0.3px;
+}
+
+.form-input::placeholder {
+  color: #888;
+  font-weight: 400;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #667eea;
+  background-color: #f8f9ff;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  transform: translateY(-2px);
+}
+
+.form-input:hover,
+.form-select:hover {
+  border-color: #667eea;
+  background-color: #fafbff;
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M7 8L10 11L13 8' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+  background-color: #ffffff;
+}
+
+.form-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M7 12L10 9L13 12' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Styling for option elements */
+.form-select option {
+  padding: 10px;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+}
+
+.form-select option:hover {
+  background: linear-gradient(#667eea, #667eea);
+  background-color: #667eea;
+  color: white;
+}
+
+.form-select option:checked {
+  background: linear-gradient(#667eea, #667eea);
+  background-color: #667eea;
+  color: white;
+}
+
+/* Submit Button */
+.btn-submit {
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.btn-icon {
+  font-size: 20px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.btn-submit:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+
+.btn-submit:hover .btn-icon {
+  transform: scale(1.2);
+}
+
+.btn-submit:active {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modern-form {
+    padding: 24px;
+    gap: 20px;
+  }
+
+  .form-input,
+  .form-select {
+    padding: 12px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  .label-icon {
+    font-size: 18px;
+  }
+
+  .btn-submit {
+    padding: 14px 24px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-icon {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modern-form {
+    padding: 16px;
+    gap: 16px;
+    margin: 20px 10px;
+    border-radius: 16px;
+  }
+
+  .form-input,
+  .form-select {
+    padding: 11px 12px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  .form-label {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .label-icon {
+    font-size: 16px;
+  }
+
+  .btn-submit {
+    padding: 12px 20px;
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .btn-icon {
+    font-size: 16px;
+  }
+
+  .form-select {
+    background-position: right 8px center;
+    padding-right: 36px;
+  }
+}
+
+/* Animation for form load */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modern-form {
+  animation: slideInUp 0.5s ease-out;
+}
+
+.form-group {
+  animation: slideInUp 0.5s ease-out;
+}
+
+.form-group:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.form-group:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.form-group:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.btn-submit {
+  animation: slideInUp 0.5s ease-out 0.4s both;
+}
+
+/* Focus visible for accessibility */
+.form-input:focus-visible,
+.form-select:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}

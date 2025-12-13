@@ -1,41 +1,73 @@
 /* Reset default margin and font family for the entire document */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #212832 !important;
   color: white;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+* {
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+p,
+span,
+div,
+button,
+input,
+select,
+textarea {
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", sans-serif;
 }
 
 /* Define styles for code blocks */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
 /* Highlight for incorrect elements or responses */
 .wrong {
   background-color: #ee545338 !important;
-  border-color: #EE5453 !important;
+  border-color: #ee5453 !important;
 }
 
 /* Highlight for correct elements or responses */
 .right {
   background-color: #28ae6138 !important;
-  border-color: #28AE61 !important;
+  border-color: #28ae61 !important;
 }
 
 /* Additional styles for icons associated with correct responses */
 .rightIcon {
-  background-color: #28AE61 !important;
+  background-color: #28ae61 !important;
 }
 
 /* Additional styles for icons associated with incorrect responses */
 .wrongIcon {
-  background-color: #EE5453 !important;
+  background-color: #ee5453 !important;
 }
 
 /* Highlight for selected options */

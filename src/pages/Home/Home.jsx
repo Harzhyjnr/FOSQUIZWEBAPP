@@ -44,15 +44,15 @@ const Home = () => {
             {
                 (url === '' || questions.length === 0)
                     ?
-                    <div className="container my-3">
-                        <Text mb={'4'} fontSize='4xl'>Start your Quiz Now</Text>
-                        <hr />
+                    <div className="container my-3 text-center">
+                        <Text mb={'4'} fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>Start your Quiz Now</Text>
+                        {/* <hr /> */}
                         <Form handleSubmit={handleSubmit} onChange={onChange} />
-                        <hr />
+                        {/* <hr />
                         <Text mb={'2'} fontSize='2xl'>Or try Map Quiz!</Text>
                         <Link to="/map">
                             <Button colorScheme="teal">Go to Map Quiz</Button>
-                        </Link>
+                        </Link> */}
                     </div>
                     :
                     <QuizArea />

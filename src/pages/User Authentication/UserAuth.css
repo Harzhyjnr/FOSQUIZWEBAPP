@@ -1,0 +1,345 @@
+/* Authentication Pages Styling */
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.auth-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 480px;
+  padding: 48px;
+  animation: slideUp 0.5s ease-out;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 36px;
+  text-align: center;
+  letter-spacing: -0.5px;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.form-input {
+  /* padding: 16px 50px 16px 16px; */
+   padding: 13px 50px 13px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  background-color: #f8f9fa;
+  color: #1a1a1a;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: #aaa;
+  font-weight: 400;
+}
+
+.form-input:hover {
+  border-color: #bbb;
+  background-color: #ffffff;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background-color: #ffffff;
+  box-shadow: none;
+  transform: none;
+}
+
+.form-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+  border-color: #e0e0e0;
+}
+
+.form-input.input-error {
+  border-color: #e74c3c;
+  background-color: #fff5f5;
+}
+
+.form-input.input-error:focus {
+  box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1);
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper .form-input {
+  width: 100%;
+  padding: 13px 50px 13px 16px;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 8px 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #667eea;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.toggle-password:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+.toggle-password:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error-text {
+  font-size: 12px;
+  color: #e74c3c;
+  font-weight: 600;
+  margin-top: -2px;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.password-hint {
+  font-size: 12px;
+  color: #888;
+  margin-top: -2px;
+  display: block;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.btn-primary {
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Alert Messages */
+.alert {
+  padding: 16px 20px;
+  border-radius: 14px;
+  font-size: 14px;
+  margin-bottom: 24px;
+  animation: slideDown 0.3s ease-out;
+  border-left: 4px solid;
+  font-weight: 600;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-error {
+  background-color: #fff5f5;
+  color: #c0392b;
+  border-left-color: #e74c3c;
+}
+
+.alert-success {
+  background-color: #f0fff4;
+  color: #1f6e2e;
+  border-left-color: #27ae60;
+}
+
+/* Auth Footer */
+.auth-footer {
+  text-align: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.auth-footer p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+}
+
+.auth-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.auth-link:hover {
+  color: #764ba2;
+  text-decoration: none;
+  transform: translateX(2px);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 36px 24px;
+    border-radius: 18px;
+  }
+
+  .auth-title {
+    font-size: 28px;
+    margin-bottom: 28px;
+  }
+
+  .form-input {
+    padding: 13px 16px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    border-radius: 12px;
+  }
+
+  .btn-primary {
+    padding: 14px 20px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+
+  .toggle-password {
+    right: 12px;
+    font-size: 18px;
+  }
+
+  .form-label {
+    font-size: 12px;
+    letter-spacing: 0.8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-card {
+    padding: 28px 16px;
+    max-width: 100%;
+  }
+
+  .auth-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    gap: 8px;
+  }
+
+  .form-input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .error-text {
+    font-size: 11px;
+  }
+
+  .btn-primary {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+}
