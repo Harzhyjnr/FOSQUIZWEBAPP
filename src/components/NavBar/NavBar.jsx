@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -10,22 +10,73 @@ import {
   Stack,
   Text,
   Button,
-} from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon, InfoIcon } from '@chakra-ui/icons';
-import logo from './../../Assets/logo.png';
-import { Link as ReachLink } from 'react-router-dom';
-import { FaHome } from 'react-icons/fa';
+} from "@chakra-ui/react";
+import { HamburgerIcon, CloseIcon, InfoIcon } from "@chakra-ui/icons";
+import logo from "./../../Assets/logo.png";
+import { Link as ReachLink, useNavigate } from "react-router-dom";
+import { FaHome } from "react-icons/fa";
 
 export default function BetterNavbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const bgColor = useColorModeValue("#212832", "gray.900");
+
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    try {
+      const u = JSON.parse(localStorage.getItem("user")) || null;
+      // enrich with isAdmin flag from users list
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const me = u ? users.find((x) => x.id === u.id) || u : null;
+      setCurrentUser(me);
+    } catch (e) {
+      setCurrentUser(null);
+    }
+  }, []);
+
+  // Close navbar when clicking on body
+  useEffect(() => {
+    const handleBodyClick = (e) => {
+      if (
+        isOpen &&
+        !e.target.closest(".navbar-menu") &&
+        !e.target.closest('button[aria-label="Open Menu"]')
+      ) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.body.addEventListener("click", handleBodyClick);
+      return () => document.body.removeEventListener("click", handleBodyClick);
+    }
+  }, [isOpen, onClose]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setCurrentUser(null);
+    navigate("/login");
+  };
+
+  // Get first two letters of user name
+  const getInitials = (name) => {
+    if (!name) return "";
+    const parts = name.split(" ");
+    return parts
+      .slice(0, 2)
+      .map((p) => p[0])
+      .join("")
+      .toUpperCase();
+  };
 
   return (
     <>
       <Box
-        bg={useColorModeValue('#212832', 'gray.900')}
+        bg={bgColor}
         px={4}
         borderBottom="1px solid"
-        borderColor={useColorModeValue('gray.200', 'gray.700')}
+        borderColor={useColorModeValue("gray.200", "gray.700")}
       >
         <Flex h={16} alignItems="center" justifyContent="space-between">
           {/* Left: Logo */}
@@ -35,7 +86,7 @@ export default function BetterNavbar() {
           <HStack
             as="nav"
             spacing={8}
-            display={{ base: 'none', md: 'flex' }}
+            display={{ base: "none", md: "flex" }}
             position="absolute"
             left="50%"
             transform="translateX(-50%)"
@@ -44,7 +95,10 @@ export default function BetterNavbar() {
               px={3}
               py={2}
               rounded="md"
-              _hover={{ textDecoration: 'none', bg: 'rgba(102, 126, 234, 0.1)' }}
+              _hover={{
+                textDecoration: "none",
+                bg: "rgba(102, 126, 234, 0.1)",
+              }}
               to="/"
             >
               <HStack spacing={2}>
@@ -56,7 +110,10 @@ export default function BetterNavbar() {
               px={3}
               py={2}
               rounded="md"
-              _hover={{ textDecoration: 'none', bg: 'rgba(102, 126, 234, 0.1)' }}
+              _hover={{
+                textDecoration: "none",
+                bg: "rgba(102, 126, 234, 0.1)",
+              }}
               to="/about"
             >
               <HStack spacing={2}>
@@ -64,50 +121,96 @@ export default function BetterNavbar() {
                 <Text fontWeight="bold">About</Text>
               </HStack>
             </ReachLink>
+            <ReachLink
+              px={3}
+              py={2}
+              rounded="md"
+              _hover={{
+                textDecoration: "none",
+                bg: "rgba(102, 126, 234, 0.1)",
+              }}
+              to="/feedback"
+            >
+              <HStack spacing={2}>
+                <Text fontWeight="bold">Feedback</Text>
+              </HStack>
+            </ReachLink>
           </HStack>
 
           {/* Right: Signup Button and Hamburger Menu */}
           <HStack spacing={2}>
-            {/* Signup Button (Desktop) */}
-            <ReachLink to="/signup">
-              <Button
-                display={{ base: 'none', md: 'flex' }}
-                colorScheme="purple"
-                variant="solid"
-                size="sm"
-                fontWeight="bold"
-                _hover={{ transform: 'translateY(-2px)', boxShadow: '0 8px 20px rgba(102, 126, 234, 0.3)' }}
-                transition="all 0.3s ease"
-              >
-                Sign Up
-              </Button>
-            </ReachLink>
+            {/* Signup / Profile Button (Desktop) */}
+            {!currentUser ? (
+              <ReachLink to="/signup">
+                <Button
+                  display={{ base: "none", md: "flex" }}
+                  colorScheme="purple"
+                  variant="solid"
+                  size="sm"
+                  fontWeight="bold"
+                  _hover={{
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 8px 20px rgba(102, 126, 234, 0.3)",
+                  }}
+                  transition="all 0.3s ease"
+                >
+                  Sign Up
+                </Button>
+              </ReachLink>
+            ) : (
+              <HStack spacing={2}>
+                {currentUser?.isAdmin && (
+                  <ReachLink to="/admin">
+                    <Button size="sm" variant="outline">
+                      Admin
+                    </Button>
+                  </ReachLink>
+                )}
+                {/* Circular Profile Avatar - Desktop and Mobile */}
+                <Avatar
+                  size="sm"
+                  bg="purple.500"
+                  color="white"
+                  name={getInitials(currentUser.name)}
+                  cursor="pointer"
+                  onClick={() => navigate("/profile")}
+                  _hover={{ opacity: 0.8, transform: "scale(1.1)" }}
+                  transition="all 0.3s ease"
+                  title={currentUser.name}
+                />
+              </HStack>
+            )}
 
-            {/* Signup Button (Mobile) - beside hamburger menu */}
-            <ReachLink to="/signup">
-              <Button
-                display={{ base: 'flex', md: 'none' }}
-                colorScheme="purple"
-                variant="solid"
-                size="xs"
-                fontWeight="bold"
-                _hover={{ transform: 'translateY(-2px)', boxShadow: '0 8px 20px rgba(102, 126, 234, 0.3)' }}
-                transition="all 0.3s ease"
-              >
-                Sign Up
-              </Button>
-            </ReachLink>
+            {/* Signup / Logout Button (Mobile) - beside hamburger menu */}
+            {!currentUser ? (
+              <ReachLink to="/signup">
+                <Button
+                  display={{ base: "flex", md: "none" }}
+                  colorScheme="purple"
+                  variant="solid"
+                  size="xs"
+                  fontWeight="bold"
+                  _hover={{
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 8px 20px rgba(102, 126, 234, 0.3)",
+                  }}
+                  transition="all 0.3s ease"
+                >
+                  Sign Up
+                </Button>
+              </ReachLink>
+            ) : null}
 
             {/* Hamburger Menu Icon (Mobile only) */}
             <IconButton
               bg="transparent"
               _hover={{
-                bg: 'rgba(102, 126, 234, 0.1)',
+                bg: "rgba(102, 126, 234, 0.1)",
               }}
               size="md"
               icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
               aria-label="Open Menu"
-              display={{ md: 'none' }}
+              display={{ md: "none" }}
               onClick={isOpen ? onClose : onOpen}
             />
           </HStack>
@@ -115,13 +218,27 @@ export default function BetterNavbar() {
 
         {/* Mobile Menu */}
         {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
+          <Box
+            pb={4}
+            display={{ md: "none" }}
+            className="navbar-menu"
+            position={{ base: "fixed", md: "relative" }}
+            top={{ base: "64px", md: "auto" }}
+            left={{ base: "0", md: "auto" }}
+            right={{ base: "0", md: "auto" }}
+            bg={bgColor}
+            width={{ base: "100%", md: "auto" }}
+            zIndex={999}
+          >
             <Stack as="nav" spacing={4}>
               <ReachLink
                 px={2}
                 py={1}
                 rounded="md"
-                _hover={{ textDecoration: 'none', bg: 'rgba(102, 126, 234, 0.1)' }}
+                _hover={{
+                  textDecoration: "none",
+                  bg: "rgba(102, 126, 234, 0.1)",
+                }}
                 to="/"
               >
                 <HStack spacing={2}>
@@ -133,7 +250,10 @@ export default function BetterNavbar() {
                 px={2}
                 py={1}
                 rounded="md"
-                _hover={{ textDecoration: 'none', bg: 'rgba(102, 126, 234, 0.1)' }}
+                _hover={{
+                  textDecoration: "none",
+                  bg: "rgba(102, 126, 234, 0.1)",
+                }}
                 to="/about"
               >
                 <HStack spacing={2}>
@@ -141,6 +261,29 @@ export default function BetterNavbar() {
                   <Text fontWeight="bold">About</Text>
                 </HStack>
               </ReachLink>
+              <ReachLink
+                px={2}
+                py={1}
+                rounded="md"
+                _hover={{
+                  textDecoration: "none",
+                  bg: "rgba(102, 126, 234, 0.1)",
+                }}
+                to="/feedback"
+              >
+                <HStack spacing={2}>
+                  <Text fontWeight="bold">Feedback</Text>
+                </HStack>
+              </ReachLink>
+              {!currentUser ? (
+                <ReachLink to="/login">
+                  <Button size="sm">Login</Button>
+                </ReachLink>
+              ) : (
+                <Button size="sm" onClick={handleLogout}>
+                  Logout
+                </Button>
+              )}
             </Stack>
           </Box>
         ) : null}
