@@ -10,14 +10,15 @@ import Userlogin from "./pages/User Authentication/Userlogin";
 import UserSignup from "./pages/User Authentication/UserSignup";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import PublicRoute from "./components/Auth/PublicRoute";
-import NavBar from "./components/NavBar/NavBar";
-import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminRoute from "./components/Auth/AdminRoute";
+import NavBar from "./components/NavBar/NavBar";
+import AdminLayout from "./components/Admin/AdminLayout";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 import Profile from "./pages/Profile/Profile";
 import Feedback from "./pages/Feedback/Feedback";
 import { Routes, Route } from "react-router-dom";
 
-// Layout component to include NavBar only on selected pages
+// Layout component for regular users (with NavBar)
 const Layout = ({ children }) => (
   <>
     <NavBar />
@@ -36,7 +37,19 @@ function App() {
             <Route path="/signup" element={<UserSignup />} />
           </Route>
 
-          {/* Protected routes: require authentication */}
+          {/* Admin routes: with AdminLayout */}
+          <Route element={<AdminRoute />}>
+            <Route
+              path="/admin"
+              element={
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              }
+            />
+          </Route>
+
+          {/* Protected routes for regular users: require authentication */}
           <Route element={<ProtectedRoute />}>
             <Route
               path="/"
@@ -70,16 +83,6 @@ function App() {
                 </Layout>
               }
             />
-            <Route element={<AdminRoute />}>
-              <Route
-                path="/admin"
-                element={
-                  <Layout>
-                    <AdminDashboard />
-                  </Layout>
-                }
-              />
-            </Route>
             <Route
               path="/profile"
               element={
@@ -98,7 +101,7 @@ function App() {
             />
           </Route>
 
-          {/* 404 page (keeps default behavior) */}
+          {/* 404 page */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
