@@ -4,20 +4,10 @@ import QuizArea from "../QuizArea/QuizArea";
 import quizContext from "../../context/quizContext";
 import { HashLoader } from "react-spinners";
 import { Text } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import { Button } from "@chakra-ui/react";
 
 const Home = () => {
   const context = useContext(quizContext);
-  const {
-    setUrl,
-    url,
-    fetchQuestions,
-    setLoading,
-    loading,
-    questions,
-    setQuestionsFromStore,
-  } = context;
+  const { setLoading, loading, questions, setQuestionsFromStore } = context;
   const [formData, setFormData] = useState({
     level: "any",
     department: "any",
@@ -25,17 +15,10 @@ const Home = () => {
     count: 10,
   });
 
-  // eslint-disable-next-line no-unused-vars
-  const [location, setLocation] = useState(null);
-
   const handleStart = ({ level, department, course, count }) => {
     localStorage.setItem("timer", 30);
     setLoading(true);
     setQuestionsFromStore({ level, department, course, count });
-  };
-
-  const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
