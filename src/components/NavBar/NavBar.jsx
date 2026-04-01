@@ -166,6 +166,14 @@ export default function BetterNavbar() {
                     </Button>
                   </ReachLink>
                 )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  display={{ base: "none", md: "inline-flex" }}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
                 {/* Circular Profile Avatar - Desktop and Mobile */}
                 <Avatar
                   size="sm"

@@ -23,6 +23,11 @@ import {
   Text,
   SimpleGrid,
   useToast,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import {
@@ -181,7 +186,7 @@ const AdminDashboard = () => {
   const toggleAdmin = (userId) => {
     const allUsers = JSON.parse(localStorage.getItem("users") || "[]");
     const updated = allUsers.map((us) =>
-      us.id === userId ? { ...us, isAdmin: !us.isAdmin } : us
+      us.id === userId ? { ...us, isAdmin: !us.isAdmin } : us,
     );
     localStorage.setItem("users", JSON.stringify(updated));
     loadUsers();
@@ -191,6 +196,24 @@ const AdminDashboard = () => {
         : "Admin rights revoked",
       status: "success",
       duration: 2000,
+    });
+  };
+
+  // Group questions by department + course for easier navigation
+  const groupedByCourse = () => {
+    const grouped = list.reduce((acc, q) => {
+      const key = `${q.department}||${q.course}`;
+      if (!acc[key])
+        acc[key] = { department: q.department, course: q.course, items: [] };
+      acc[key].items.push(q);
+      return acc;
+    }, {});
+    return Object.values(grouped).sort((a, b) => {
+      if (a.department < b.department) return -1;
+      if (a.department > b.department) return 1;
+      if (a.course < b.course) return -1;
+      if (a.course > b.course) return 1;
+      return 0;
     });
   };
 
@@ -239,8 +262,6 @@ const AdminDashboard = () => {
                       >
                         <option value="100">100</option>
                         <option value="200">200</option>
-                        <option value="300">300</option>
-                        <option value="400">400</option>
                       </Select>
                     </VStack>
                     <VStack align="start" spacing={2}>
@@ -378,97 +399,128 @@ const AdminDashboard = () => {
                   No questions yet. Add your first question above!
                 </Text>
               ) : (
-                <VStack spacing={4} align="stretch">
-                  {list.map((q) => (
-                    <Box
-                      key={q.id}
-                      bg={questionBg}
-                      p={4}
-                      borderRadius="md"
-                      borderLeft="4px"
-                      borderColor="purple.500"
+                <Accordion allowMultiple>
+                  {groupedByCourse().map((g, gi) => (
+                    <AccordionItem
+                      key={`${g.department}-${g.course}-${gi}`}
+                      border="none"
                     >
-                      <VStack align="start" spacing={3} w="100%">
-                        {/* Title */}
-                        <HStack spacing={2} flexWrap="wrap">
-                          <Badge colorScheme="blue">{q.level}</Badge>
-                          <Text
-                            fontWeight="600"
-                            color={textColor}
-                            fontSize={{ base: "sm", md: "md" }}
-                          >
-                            {q.department} — {q.course}
-                          </Text>
-                        </HStack>
+                      <h2>
+                        <AccordionButton
+                          _hover={{ bg: headerBg }}
+                          px={3}
+                          py={2}
+                        >
+                          <Box flex="1" textAlign="left">
+                            <HStack spacing={3} align="center">
+                              <Badge colorScheme="teal">{g.items.length}</Badge>
+                              <Text fontWeight="600" color={textColor}>
+                                {g.department} — {g.course}
+                              </Text>
+                            </HStack>
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
+                      </h2>
+                      <AccordionPanel pb={4} px={0}>
+                        <VStack spacing={4} align="stretch">
+                          {g.items.map((q) => (
+                            <Box
+                              key={q.id}
+                              bg={questionBg}
+                              p={4}
+                              borderRadius="md"
+                              borderLeft="4px"
+                              borderColor="purple.500"
+                            >
+                              <VStack align="start" spacing={3} w="100%">
+                                <HStack spacing={2} flexWrap="wrap">
+                                  <Badge colorScheme="blue">{q.level}</Badge>
+                                  <Text
+                                    fontWeight="600"
+                                    color={textColor}
+                                    fontSize={{ base: "sm", md: "md" }}
+                                  >
+                                    {q.department} — {q.course}
+                                  </Text>
+                                </HStack>
 
-                        {/* Question */}
-                        <Text
-                          color={textColor}
-                          fontSize={{ base: "sm", md: "md" }}
-                          dangerouslySetInnerHTML={{ __html: q.question }}
-                        />
-
-                        {/* Options */}
-                        <Box w="100%">
-                          <Text
-                            fontSize="xs"
-                            fontWeight="600"
-                            color={labelColor}
-                            mb={2}
-                          >
-                            Options:
-                          </Text>
-                          <VStack align="start" spacing={1} pl={4}>
-                            {q.options.map((opt, idx) => (
-                              <HStack key={idx} spacing={2}>
                                 <Text
-                                  fontSize="xs"
-                                  color={
-                                    opt === q.correctAnswer
-                                      ? "green.500"
-                                      : textColor
-                                  }
-                                  fontWeight={
-                                    opt === q.correctAnswer ? "bold" : "normal"
-                                  }
-                                >
-                                  {String.fromCharCode(65 + idx)}. {opt}
-                                  {opt === q.correctAnswer && (
-                                    <Badge colorScheme="green" size="sm">
-                                      Correct
-                                    </Badge>
-                                  )}
-                                </Text>
-                              </HStack>
-                            ))}
-                          </VStack>
-                        </Box>
+                                  color={textColor}
+                                  fontSize={{ base: "sm", md: "md" }}
+                                  dangerouslySetInnerHTML={{
+                                    __html: q.question,
+                                  }}
+                                />
 
-                        {/* Actions */}
-                        <HStack spacing={2} pt={2}>
-                          <Button
-                            size="sm"
-                            leftIcon={<EditIcon />}
-                            colorScheme="blue"
-                            variant="outline"
-                            onClick={() => handleEdit(q)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            size="sm"
-                            leftIcon={<DeleteIcon />}
-                            colorScheme="red"
-                            variant="outline"
-                            onClick={() => handleDelete(q.id)}
-                          >
-                            Delete
-                          </Button>
-                        </HStack>
-                      </VStack>
-                    </Box>
+                                <Box w="100%">
+                                  <Text
+                                    fontSize="xs"
+                                    fontWeight="600"
+                                    color={labelColor}
+                                    mb={2}
+                                  >
+                                    Options:
+                                  </Text>
+                                  <VStack align="start" spacing={1} pl={4}>
+                                    {q.options.map((opt, idx) => (
+                                      <HStack key={idx} spacing={2}>
+                                        <Text
+                                          fontSize="xs"
+                                          color={
+                                            opt === q.correctAnswer
+                                              ? "green.500"
+                                              : textColor
+                                          }
+                                          fontWeight={
+                                            opt === q.correctAnswer
+                                              ? "bold"
+                                              : "normal"
+                                          }
+                                        >
+                                          {String.fromCharCode(65 + idx)}. {opt}
+                                          {opt === q.correctAnswer && (
+                                            <Badge
+                                              colorScheme="green"
+                                              size="sm"
+                                            >
+                                              Correct
+                                            </Badge>
+                                          )}
+                                        </Text>
+                                      </HStack>
+                                    ))}
+                                  </VStack>
+                                </Box>
+
+                                <HStack spacing={2} pt={2}>
+                                  <Button
+                                    size="sm"
+                                    leftIcon={<EditIcon />}
+                                    colorScheme="blue"
+                                    variant="outline"
+                                    onClick={() => handleEdit(q)}
+                                  >
+                                    Edit
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    leftIcon={<DeleteIcon />}
+                                    colorScheme="red"
+                                    variant="outline"
+                                    onClick={() => handleDelete(q.id)}
+                                  >
+                                    Delete
+                                  </Button>
+                                </HStack>
+                              </VStack>
+                            </Box>
+                          ))}
+                        </VStack>
+                      </AccordionPanel>
+                    </AccordionItem>
                   ))}
-                </VStack>
+                </Accordion>
               )}
             </CardBody>
           </Card>

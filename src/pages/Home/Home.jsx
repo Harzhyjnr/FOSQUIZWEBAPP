@@ -57,7 +57,7 @@ const Home = () => {
         />
       </div>
 
-      {url === "" || questions.length === 0 ? (
+      {questions.length === 0 ? (
         <div className="container my-3 text-center">
           <Text mb={"4"} fontSize={{ base: "2xl", sm: "3xl", md: "4xl" }}>
             Start your Quiz Now
