@@ -1,4 +1,11 @@
 {
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}{
   "name": "quiz-app",
   "version": "0.1.0",
   "private": true,

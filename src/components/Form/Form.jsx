@@ -62,7 +62,7 @@ const Form = ({ onStart }) => {
     if (form.course !== "any" && !cs.includes(form.course)) {
       setForm((prev) => ({ ...prev, course: "any" }));
     }
-  }, [form.level, form.department, questionsStore]);
+  }, [form.level, form.department, form.course, questionsStore]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
