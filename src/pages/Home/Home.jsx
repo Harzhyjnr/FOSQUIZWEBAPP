@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Form from "../../components/Form/Form";
 import QuizArea from "../QuizArea/QuizArea";
 import quizContext from "../../context/quizContext";
@@ -8,12 +8,6 @@ import { Text } from "@chakra-ui/react";
 const Home = () => {
   const context = useContext(quizContext);
   const { setLoading, loading, questions, setQuestionsFromStore } = context;
-  const [formData, setFormData] = useState({
-    level: "any",
-    department: "any",
-    course: "any",
-    count: 10,
-  });
 
   const handleStart = ({ level, department, course, count }) => {
     localStorage.setItem("timer", 30);
@@ -41,17 +35,31 @@ const Home = () => {
       </div>
 
       {questions.length === 0 ? (
-        <div className="container my-3 text-center">
-          <Text mb={"4"} fontSize={{ base: "2xl", sm: "3xl", md: "4xl" }}>
-            Start your Quiz Now
-          </Text>
-          {/* <hr /> */}
-          <Form onStart={handleStart} />
-          {/* <hr />
-                        <Text mb={'2'} fontSize='2xl'>Or try Map Quiz!</Text>
-                        <Link to="/map">
-                            <Button colorScheme="teal">Go to Map Quiz</Button>
-                        </Link> */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "calc(100vh - 80px)",
+            padding: "20px",
+          }}
+        >
+          <div style={{ width: "100%", maxWidth: "600px" }}>
+            <Text
+              mb={"4"}
+              fontSize={{ base: "2xl", sm: "3xl", md: "4xl" }}
+              textAlign="center"
+            >
+              Start your Quiz Now
+            </Text>
+            {/* <hr /> */}
+            <Form onStart={handleStart} />
+            {/* <hr />
+                              <Text mb={'2'} fontSize='2xl'>Or try Map Quiz!</Text>
+                              <Link to="/map">
+                                  <Button colorScheme="teal">Go to Map Quiz</Button>
+                              </Link> */}
+          </div>
         </div>
       ) : (
         <QuizArea />
