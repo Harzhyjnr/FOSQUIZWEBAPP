@@ -11,7 +11,7 @@ const audio = new Audio(clickAudio);
 const QuestionBox = (props) => {
   const [selectedAns, setSelectedAns] = useState("");
   const context = useContext(quizContext);
-  const { setScore, next, setNext, len, answerList, setAnswerList } = context;
+  const { setScore, next, setNext, len, setAnswerList } = context;
   const { question, options, category } = props;
   //Here options[0] = options array and options[1] = correct answer
   //let i = -1
@@ -82,13 +82,16 @@ const QuestionBox = (props) => {
   };
 
   // Update the score (count unanswered as wrong)
-  const checkAnswer = (selectedAns) => {
-    if (selectedAns === "" || selectedAns !== options[1]) {
-      setScore((prev) => ({ ...prev, wrongAnswers: prev.wrongAnswers + 1 }));
-    } else if (selectedAns === options[1]) {
-      setScore((prev) => ({ ...prev, rightAnswers: prev.rightAnswers + 1 }));
-    }
-  };
+  const checkAnswer = useCallback(
+    (selectedAns) => {
+      if (selectedAns === "" || selectedAns !== options[1]) {
+        setScore((prev) => ({ ...prev, wrongAnswers: prev.wrongAnswers + 1 }));
+      } else if (selectedAns === options[1]) {
+        setScore((prev) => ({ ...prev, rightAnswers: prev.rightAnswers + 1 }));
+      }
+    },
+    [options, setScore],
+  );
 
   const handleOptionClick = (optionValue, idx) => {
     audio.play();
