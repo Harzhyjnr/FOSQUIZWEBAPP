@@ -7,6 +7,7 @@ const Form = ({ onStart }) => {
   const [levels, setLevels] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     level: "any",
     department: "any",
@@ -31,12 +32,12 @@ const Form = ({ onStart }) => {
 
     // departments available for selected level
     const depsForLevel = Array.from(
-      new Set(byLevel.map((x) => x.department))
+      new Set(byLevel.map((x) => x.department)),
     ).sort();
     setDepartments(
       form.level === "any"
         ? Array.from(new Set(questionsStore.map((x) => x.department))).sort()
-        : depsForLevel
+        : depsForLevel,
     );
 
     let filtered = byLevel;
@@ -44,7 +45,7 @@ const Form = ({ onStart }) => {
       filtered = filtered.filter(
         (q) =>
           String(q.department).toLowerCase() ===
-          String(form.department).toLowerCase()
+          String(form.department).toLowerCase(),
       );
     const cs = Array.from(new Set(filtered.map((x) => x.course))).sort();
     setCourses(cs);
@@ -53,7 +54,7 @@ const Form = ({ onStart }) => {
     if (
       form.department !== "any" &&
       !(form.level === "any" ? questionsStore : byLevel).some(
-        (q) => q.department === form.department
+        (q) => q.department === form.department,
       )
     ) {
       setForm((prev) => ({ ...prev, department: "any", course: "any" }));
@@ -65,17 +66,39 @@ const Form = ({ onStart }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "count" && value !== "") {
+      const numericValue = Number(value);
+      if (numericValue < 10 || numericValue > 50) {
+        setError("You can only choose between 10 and 50 questions.");
+      } else {
+        setError("");
+      }
+      setForm((prev) => ({ ...prev, [name]: numericValue }));
+      return;
+    }
+
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const questionCount = Number(form.count);
+    if (
+      Number.isNaN(questionCount) ||
+      questionCount < 10 ||
+      questionCount > 50
+    ) {
+      setError("You may only choose between 10 and 50 questions.");
+      return;
+    }
+
+    setError("");
     onStart &&
       onStart({
         level: form.level,
         department: form.department,
         course: form.course,
-        count: Number(form.count),
+        count: questionCount,
       });
   };
 
@@ -137,15 +160,20 @@ const Form = ({ onStart }) => {
         <input
           name="count"
           type="number"
-          min="1"
+          min="10"
           max="50"
           className="form-input"
           value={form.count}
           onChange={handleChange}
         />
+        {error && <div className="form-error">{error}</div>}
       </div>
 
-      <button type="submit" className="btn-submit">
+      <button
+        type="submit"
+        className="btn-submit"
+        disabled={Number(form.count) < 10 || Number(form.count) > 50}
+      >
         Start Quiz
       </button>
     </form>
