@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import "./QuestionBox.css";
 import { Badge } from "@chakra-ui/react";
 import quizContext from "../../context/quizContext";
@@ -11,8 +11,7 @@ const audio = new Audio(clickAudio);
 const QuestionBox = (props) => {
   const [selectedAns, setSelectedAns] = useState("");
   const context = useContext(quizContext);
-  const { setScore, score, next, setNext, len, answerList, setAnswerList } =
-    context;
+  const { setScore, next, setNext, len, answerList, setAnswerList } = context;
   const { question, options, category } = props;
   //Here options[0] = options array and options[1] = correct answer
   //let i = -1
@@ -32,7 +31,7 @@ const QuestionBox = (props) => {
     const randomWrong =
       wrongOptions[Math.floor(Math.random() * wrongOptions.length)];
     const newOptions = [options[1], randomWrong].sort(
-      () => Math.random() - 0.5
+      () => Math.random() - 0.5,
     );
 
     setFilteredOptions(newOptions);
@@ -99,7 +98,7 @@ const QuestionBox = (props) => {
     if (element) element.classList.add("optionSelected");
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = useCallback(() => {
     if (next <= len - 1) {
       checkAnswer(selectedAns);
       setNext((n) => n + 1);
@@ -119,7 +118,19 @@ const QuestionBox = (props) => {
         rightAnswer: options[1],
       },
     ]);
-  };
+  }, [
+    next,
+    len,
+    selectedAns,
+    options,
+    question,
+    category,
+    setNext,
+    checkAnswer,
+    setFilteredOptions,
+    setAudienceHelp,
+    setAnswerList,
+  ]);
 
   // for reverse timer
   const [timer, setTimer] = useState(() => {
@@ -141,7 +152,7 @@ const QuestionBox = (props) => {
       });
     }, 1000);
     return () => clearInterval(myInterval);
-  }, [next, selectedAns, answerList]);
+  }, [handleNextQuestion]);
 
   return (
     <>
