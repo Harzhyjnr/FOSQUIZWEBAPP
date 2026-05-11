@@ -135,6 +135,16 @@ const QuestionBox = (props) => {
     setAnswerList,
   ]);
 
+  const handlePrevQuestion = useCallback(() => {
+    if (next > 0) {
+      setNext((n) => n - 1);
+      setSelectedAns("");
+      localStorage.setItem("timer", 30);
+      setFilteredOptions(options[0]);
+      setAudienceHelp(null);
+    }
+  }, [next, options, setNext, setFilteredOptions, setAudienceHelp]);
+
   // for reverse timer
   const [timer, setTimer] = useState(() => {
     const savedTimer = localStorage.getItem("timer");
@@ -162,6 +172,9 @@ const QuestionBox = (props) => {
       <div className="q-box mx-auto my-5 p-4 text-center">
         <div className="q-box_head">
           <div className="q-box_timer">{timer}s</div>
+          <div className="q-counter">
+            Question {next + 1}/{len}
+          </div>
           <div
             className="q-question"
             dangerouslySetInnerHTML={{ __html: question }}
@@ -221,7 +234,17 @@ const QuestionBox = (props) => {
 
         <div className="d-flex flex-wrap justify-content-between align-items-center mx-3">
           <Badge colorScheme="purple">{category}</Badge>
-          <button onClick={handleNextQuestion} className="btn btn-primary m-2">
+        </div>
+
+        <div className="q-nav-buttons">
+          <button
+            onClick={handlePrevQuestion}
+            className="btn btn-prev"
+            disabled={next === 0}
+          >
+            Previous
+          </button>
+          <button onClick={handleNextQuestion} className="btn btn-next">
             {next >= len - 1 ? "Submit" : "Next"}
           </button>
         </div>

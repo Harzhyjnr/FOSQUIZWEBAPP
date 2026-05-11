@@ -83,6 +83,13 @@ const Form = ({ onStart }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const questionCount = Number(form.count);
+
+    // Validate course selection
+    if (form.course === "any") {
+      setError("Please select a course to proceed.");
+      return;
+    }
+
     if (
       Number.isNaN(questionCount) ||
       questionCount < 10 ||
