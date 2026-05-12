@@ -228,6 +228,7 @@ export default function BetterNavbar() {
         {isOpen ? (
           <Box
             pb={4}
+            px={4}
             display={{ md: "none" }}
             className="navbar-menu"
             position={{ base: "fixed", md: "relative" }}
@@ -238,11 +239,12 @@ export default function BetterNavbar() {
             width={{ base: "100%", md: "auto" }}
             zIndex={999}
           >
-            <Stack as="nav" spacing={4}>
+            <Stack as="nav" spacing={4} py={4}>
               <ReachLink
-                px={2}
-                py={1}
+                px={4}
+                py={3}
                 rounded="md"
+                display="block"
                 _hover={{
                   textDecoration: "none",
                   bg: "rgba(102, 126, 234, 0.1)",
@@ -255,9 +257,10 @@ export default function BetterNavbar() {
                 </HStack>
               </ReachLink>
               <ReachLink
-                px={2}
-                py={1}
+                px={4}
+                py={3}
                 rounded="md"
+                display="block"
                 _hover={{
                   textDecoration: "none",
                   bg: "rgba(102, 126, 234, 0.1)",
@@ -270,9 +273,10 @@ export default function BetterNavbar() {
                 </HStack>
               </ReachLink>
               <ReachLink
-                px={2}
-                py={1}
+                px={4}
+                py={3}
                 rounded="md"
+                display="block"
                 _hover={{
                   textDecoration: "none",
                   bg: "rgba(102, 126, 234, 0.1)",

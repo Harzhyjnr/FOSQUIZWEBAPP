@@ -31,6 +31,8 @@ const Scoreboard = (props) => {
         correct: correct_que,
         wrong: wrong_que,
         answers: answerList || [],
+        course: context.course !== "any" ? context.course : "General",
+        department: context.department !== "any" ? context.department : "All",
       };
       const saved = addAttempt(attempt);
       if (saved) {

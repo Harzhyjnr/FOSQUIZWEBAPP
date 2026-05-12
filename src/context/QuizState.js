@@ -16,6 +16,9 @@ const QuizState = (props) => {
     audience: false,
     revealAnswer: false,
   });
+  const [level, setLevel] = useState("any");
+  const [department, setDepartment] = useState("any");
+  const [course, setCourse] = useState("any");
 
   const fetchQuestions = async (api) => {
     const response = await fetch(api);
@@ -31,6 +34,11 @@ const QuizState = (props) => {
     course = "any",
     count = 10,
   } = {}) => {
+    // Store the quiz parameters for later use (e.g., in attempts)
+    setLevel(level);
+    setDepartment(department);
+    setCourse(course);
+
     const all = getQuestions();
     let filtered = all;
     if (level && level !== "any")
@@ -39,11 +47,11 @@ const QuizState = (props) => {
       filtered = filtered.filter(
         (q) =>
           String(q.department).toLowerCase() ===
-          String(department).toLowerCase()
+          String(department).toLowerCase(),
       );
     if (course && course !== "any")
       filtered = filtered.filter(
-        (q) => String(q.course).toLowerCase() === String(course).toLowerCase()
+        (q) => String(q.course).toLowerCase() === String(course).toLowerCase(),
       );
 
     // shuffle
@@ -52,14 +60,12 @@ const QuizState = (props) => {
       [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
     }
 
-    const chosen = filtered
-      .slice(0, count)
-      .map((q) => ({
-        category: `${q.department} - ${q.course}`,
-        question: q.question,
-        incorrect_answers: q.options.filter((o) => o !== q.correctAnswer),
-        correct_answer: q.correctAnswer,
-      }));
+    const chosen = filtered.slice(0, count).map((q) => ({
+      category: `${q.department} - ${q.course}`,
+      question: q.question,
+      incorrect_answers: q.options.filter((o) => o !== q.correctAnswer),
+      correct_answer: q.correctAnswer,
+    }));
     setQuestions(chosen);
     setLoading(false);
   };
@@ -88,6 +94,9 @@ const QuizState = (props) => {
         setNext,
         usedLifelines,
         setUsedLifelines,
+        level,
+        department,
+        course,
       }}
     >
       {props.children}

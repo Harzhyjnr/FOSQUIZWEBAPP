@@ -1,111 +1,231 @@
 .main {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    background-image: url("./../../Assets/scoreboard-bg.jpg");
-    /* background: linear-gradient(179deg, #58158c 0%, #e8c3ff 100%); */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-radius: 0px 0px 50px 50px;
-    min-height: 377px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  background-image: url("./../../Assets/scoreboard-bg.jpg");
+  /* background: linear-gradient(179deg, #58158c 0%, #e8c3ff 100%); */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 0px 0px 50px 50px;
+  min-height: 377px;
 }
 
 .score-container,
 .remark-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .remark-container {
-    line-height: 25px;
+  line-height: 25px;
 }
 
 .score {
-    /* border: 6px solid rgba(128, 128, 128, 0.345); */
-    font-size: 1.2rem;
-    color: #a45eda;
-    background-color: white;
-    border-radius: 50%;
-    padding: 3rem 1.8rem;
-    margin: 2rem 0 18px 0;
-    font-weight: 600;
-    text-align: center;
+  /* border: 6px solid rgba(128, 128, 128, 0.345); */
+  font-size: 1.2rem;
+  color: #a45eda;
+  background-color: white;
+  border-radius: 50%;
+  padding: 3rem 1.8rem;
+  margin: 2rem 0 18px 0;
+  font-weight: 600;
+  text-align: center;
 }
 
 .score span {
-    font-size: 2.3rem;
+  font-size: 2.3rem;
 }
 
 .point-table {
-    display: inline-flex;
-    flex-wrap: wrap;
-    margin: 0px 20px;
-    justify-content: center;
-    /* border: 2px solid red; */
-    background-color: aliceblue;
-    color: black;
-    border-radius: 15px;
-    max-width: 430px;
-    position: relative;
-    top: 82px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin: 0px 20px;
+  justify-content: center;
+  /* border: 2px solid red; */
+  background-color: aliceblue;
+  color: black;
+  border-radius: 15px;
+  max-width: 430px;
+  position: relative;
+  top: 82px;
 }
 
 .semi-table {
-    margin: 8px 6px;
-    padding: 6px 12px;
-    display: flex;
-    width: 155px;
-    align-items: baseline;
-    /* border: 4px dotted aqua; */
+  margin: 8px 6px;
+  padding: 6px 12px;
+  display: flex;
+  width: 155px;
+  align-items: baseline;
+  /* border: 4px dotted aqua; */
 }
 
 .circle {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
 .point {
-    font-size: 1.2rem;
-    font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .point-info {
-    /* font-size: 1rem; */
-    font-size: 15px;
-    font-weight: 400;
+  /* font-size: 1rem; */
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .footer {
-    /* position: fixed; */
-    height: 15rem;
-    bottom: 25px;
-    text-align: center;
-    padding-top: 4rem;
-    /* border: 2px solid yellowgreen; */
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  /* position: fixed; */
+  height: 15rem;
+  bottom: 25px;
+  text-align: center;
+  padding-top: 4rem;
+  /* border: 2px solid yellowgreen; */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .home-btn {
-    color: white;
-    border-radius: 50%;
-    padding: 12px 13px;
-    font-size: 1.8rem;
-    text-decoration: none;
-    margin: 0px 15px;
+  color: white;
+  border-radius: 50%;
+  padding: 12px 13px;
+  font-size: 1.8rem;
+  text-decoration: none;
+  margin: 0px 15px;
 }
 
 .home-btn:hover {
-    background-color: rgba(236, 185, 255, 0.638) !important;
-    cursor: pointer;
+  background-color: rgba(236, 185, 255, 0.638) !important;
+  cursor: pointer;
 }
 
 .footer-text {
-    font-size: 11px;
+  font-size: 11px;
+}
+
+/* Responsive design for tablets */
+@media (max-width: 768px) {
+  .main {
+    min-height: 300px;
+    border-radius: 0px 0px 30px 30px;
+  }
+
+  .score {
+    font-size: 1rem;
+    padding: 2rem 1.5rem;
+    margin: 1.5rem 0 15px 0;
+  }
+
+  .score span {
+    font-size: 2rem;
+  }
+
+  .point-table {
+    margin: 0px 15px;
+    max-width: 100%;
+    top: 60px;
+    padding: 10px;
+  }
+
+  .semi-table {
+    margin: 6px 4px;
+    padding: 4px 10px;
+    width: 130px;
+    font-size: 0.9rem;
+  }
+
+  .point {
+    font-size: 1rem;
+  }
+
+  .point-info {
+    font-size: 13px;
+  }
+
+  .home-btn {
+    padding: 10px 11px;
+    font-size: 1.5rem;
+    margin: 0px 10px;
+  }
+
+  .footer {
+    height: 12rem;
+    padding-top: 3rem;
+    bottom: 15px;
+  }
+
+  .footer-text {
+    font-size: 10px;
+  }
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 480px) {
+  .main {
+    min-height: 250px;
+    border-radius: 0px 0px 20px 20px;
+  }
+
+  .score {
+    font-size: 0.9rem;
+    padding: 1.5rem 1.2rem;
+    margin: 1rem 0 12px 0;
+  }
+
+  .score span {
+    font-size: 1.7rem;
+  }
+
+  .point-table {
+    margin: 0px 10px;
+    max-width: 95%;
+    top: 45px;
+    padding: 8px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .semi-table {
+    margin: 4px 2px;
+    padding: 3px 8px;
+    width: 100%;
+    justify-content: center;
+    font-size: 0.8rem;
+  }
+
+  .point {
+    font-size: 0.9rem;
+  }
+
+  .point-info {
+    font-size: 12px;
+  }
+
+  .circle {
+    width: 6px;
+    height: 6px;
+  }
+
+  .home-btn {
+    padding: 8px 9px;
+    font-size: 1.3rem;
+    margin: 0px 8px;
+  }
+
+  .footer {
+    height: 10rem;
+    padding-top: 2rem;
+    bottom: 10px;
+  }
+
+  .footer-text {
+    font-size: 9px;
+  }
 }

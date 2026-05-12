@@ -40,7 +40,7 @@ const Profile = () => {
         const userAttempts =
           allAttempts.filter((a) => a.userId === userData.id) || [];
         setAttempts(
-          userAttempts.sort((a, b) => new Date(b.date) - new Date(a.date))
+          userAttempts.sort((a, b) => new Date(b.date) - new Date(a.date)),
         );
       }
     } catch (error) {
@@ -258,6 +258,7 @@ const Profile = () => {
                   <Thead display={{ base: "none", md: "table-header-group" }}>
                     <Tr>
                       <Th color={mutedText}>Date</Th>
+                      <Th color={mutedText}>Course</Th>
                       <Th isNumeric color={mutedText}>
                         Correct
                       </Th>
@@ -301,6 +302,23 @@ const Profile = () => {
                             fontSize={{ base: "sm", md: "md" }}
                           >
                             {new Date(attempt.date).toLocaleString()}
+                          </Td>
+                          <Td
+                            color={textColor}
+                            display={{ base: "block", md: "table-cell" }}
+                            mb={{ base: 2, md: 0 }}
+                            before={{
+                              base: {
+                                content: '"Course: "',
+                                fontWeight: "bold",
+                                display: "block",
+                                mb: 1,
+                              },
+                              md: {},
+                            }}
+                            fontSize={{ base: "sm", md: "md" }}
+                          >
+                            {attempt.course || "General"}
                           </Td>
                           <Td
                             isNumeric
@@ -357,8 +375,8 @@ const Profile = () => {
                                 score >= 70
                                   ? "green"
                                   : score >= 50
-                                  ? "yellow"
-                                  : "red"
+                                    ? "yellow"
+                                    : "red"
                               }
                             >
                               {score}%

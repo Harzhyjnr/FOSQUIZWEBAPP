@@ -49,6 +49,7 @@ const Feedback = () => {
         id: Date.now().toString(),
         userId: user?.id || null,
         userName: user?.name || "Guest",
+        userEmail: user?.email || "guest@example.com",
         message: text.trim(),
         date: new Date().toISOString(),
       });
