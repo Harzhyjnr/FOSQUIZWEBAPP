@@ -47,7 +47,15 @@ const Scoreboard = (props) => {
     } catch (e) {
       console.error("Failed saving attempt", e);
     }
-  }, [total_que, correct_que, wrong_que, answerList, toast]);
+  }, [
+    total_que,
+    correct_que,
+    wrong_que,
+    answerList,
+    toast,
+    context.course,
+    context.department,
+  ]);
 
   const handleGoHome = () => {
     window.location.reload();
