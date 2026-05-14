@@ -10,7 +10,10 @@ const Home = () => {
   const { setLoading, loading, questions, setQuestionsFromStore } = context;
 
   const handleStart = ({ level, department, course, count }) => {
-    localStorage.setItem("timer", 30);
+    // Calculate total time: 30 seconds per question
+    // So for 30 questions: 30 * 30 = 900 seconds (15 minutes)
+    const totalSeconds = count * 30;
+    localStorage.setItem("timer", totalSeconds);
     setLoading(true);
     setQuestionsFromStore({ level, department, course, count });
   };

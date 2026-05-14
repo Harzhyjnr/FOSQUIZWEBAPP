@@ -106,7 +106,6 @@ const QuestionBox = (props) => {
       checkAnswer(selectedAns);
       setNext((n) => n + 1);
       setSelectedAns("");
-      localStorage.setItem("timer", 30);
       setFilteredOptions(options[0]);
       setAudienceHelp(null);
     }
@@ -139,16 +138,15 @@ const QuestionBox = (props) => {
     if (next > 0) {
       setNext((n) => n - 1);
       setSelectedAns("");
-      localStorage.setItem("timer", 30);
       setFilteredOptions(options[0]);
       setAudienceHelp(null);
     }
   }, [next, options, setNext, setFilteredOptions, setAudienceHelp]);
 
-  // for reverse timer
+  // Overall quiz timer - counts down for the entire quiz
   const [timer, setTimer] = useState(() => {
     const savedTimer = localStorage.getItem("timer");
-    return savedTimer ? parseInt(savedTimer) : 30;
+    return savedTimer ? parseInt(savedTimer) : 900; // Default to 15 minutes (900 seconds)
   });
 
   useEffect(() => {
@@ -158,9 +156,9 @@ const QuestionBox = (props) => {
           localStorage.setItem("timer", t - 1);
           return t - 1;
         } else {
-          // time's up: move to next and record answer (will be counted as wrong)
+          // Quiz time's up - end quiz
           handleNextQuestion();
-          return 30;
+          return 0;
         }
       });
     }, 1000);
@@ -171,7 +169,9 @@ const QuestionBox = (props) => {
     <>
       <div className="q-box mx-auto my-5 p-4 text-center">
         <div className="q-box_head">
-          <div className="q-box_timer">{timer}s</div>
+          <div className="q-box_timer">
+            {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}
+          </div>
           <div className="q-counter">
             Question {next + 1}/{len}
           </div>
