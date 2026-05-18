@@ -16,7 +16,12 @@ const Scoreboard = (props) => {
   const toast = useToast();
   const { total_que, correct_que, wrong_que } = props;
   let percentage = (correct_que / total_que) * 100;
-  let Attempted = ((correct_que + wrong_que) / total_que) * 100;
+
+  // Calculate attempted questions - count only unique questions with non-empty answers
+  const attemptedCount = answerList.filter(
+    (answer) => answer && answer.myAnswer && answer.myAnswer.trim() !== "",
+  ).length;
+  let Attempted = (attemptedCount / total_que) * 100;
 
   // Save attempt on mount
   useEffect(() => {

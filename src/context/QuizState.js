@@ -28,6 +28,14 @@ const QuizState = (props) => {
     setLoading(false);
   };
 
+  const updateAnswerAtIndex = (index, answerData) => {
+    setAnswerList((prev) => {
+      const newList = [...prev];
+      newList[index] = answerData;
+      return newList;
+    });
+  };
+
   const setQuestionsFromStore = ({
     level = "any",
     department = "any",
@@ -79,6 +87,7 @@ const QuizState = (props) => {
       value={{
         answerList,
         setAnswerList,
+        updateAnswerAtIndex,
         len,
         questions,
         setQuestions,

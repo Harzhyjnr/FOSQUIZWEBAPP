@@ -11,7 +11,15 @@ const audio = new Audio(clickAudio);
 const QuestionBox = (props) => {
   const [selectedAns, setSelectedAns] = useState("");
   const context = useContext(quizContext);
-  const { setScore, next, setNext, len, setAnswerList } = context;
+  const {
+    setScore,
+    next,
+    setNext,
+    len,
+    setAnswerList,
+    answerList,
+    updateAnswerAtIndex,
+  } = context;
   const { question, options, category } = props;
   //Here options[0] = options array and options[1] = correct answer
   //let i = -1
@@ -22,6 +30,27 @@ const QuestionBox = (props) => {
 
   const [filteredOptions, setFilteredOptions] = useState(options[0]);
   const [audienceHelp, setAudienceHelp] = useState(null);
+
+  // Restore previously selected answer when navigating to a question
+  useEffect(() => {
+    if (answerList[next]) {
+      const previousAnswer = answerList[next].myAnswer;
+      if (previousAnswer) {
+        setSelectedAns(previousAnswer);
+        // Restore the visual selection
+        setTimeout(() => {
+          const optionsElements = document.querySelectorAll(".q-box_options");
+          optionsElements.forEach((el) => {
+            el.classList.remove("optionSelected");
+            const optionText = el.innerText.split("\n")[1]; // Get the text part without the letter
+            if (el.innerText.includes(previousAnswer)) {
+              el.classList.add("optionSelected");
+            }
+          });
+        }, 0);
+      }
+    }
+  }, [next, answerList]);
 
   // --- Lifeline handlers ---
   const handleFiftyFifty = () => {
@@ -83,14 +112,46 @@ const QuestionBox = (props) => {
 
   // Update the score (count unanswered as wrong)
   const checkAnswer = useCallback(
-    (selectedAns) => {
-      if (selectedAns === "" || selectedAns !== options[1]) {
-        setScore((prev) => ({ ...prev, wrongAnswers: prev.wrongAnswers + 1 }));
-      } else if (selectedAns === options[1]) {
-        setScore((prev) => ({ ...prev, rightAnswers: prev.rightAnswers + 1 }));
+    (selectedAns, currentIndex) => {
+      // Check if we've already scored this question before
+      const previousAnswer = answerList[currentIndex]?.myAnswer;
+
+      // Only update score if this is the first time answering this question
+      if (!previousAnswer) {
+        if (selectedAns === "" || selectedAns !== options[1]) {
+          setScore((prev) => ({
+            ...prev,
+            wrongAnswers: prev.wrongAnswers + 1,
+          }));
+        } else if (selectedAns === options[1]) {
+          setScore((prev) => ({
+            ...prev,
+            rightAnswers: prev.rightAnswers + 1,
+          }));
+        }
+      } else if (previousAnswer !== selectedAns) {
+        // If the answer changed, adjust the score accordingly
+        const wasCorrect = previousAnswer === options[1];
+        const isCorrect = selectedAns === options[1];
+
+        if (wasCorrect && !isCorrect) {
+          // Changed from correct to wrong
+          setScore((prev) => ({
+            ...prev,
+            rightAnswers: prev.rightAnswers - 1,
+            wrongAnswers: prev.wrongAnswers + 1,
+          }));
+        } else if (!wasCorrect && isCorrect) {
+          // Changed from wrong to correct
+          setScore((prev) => ({
+            ...prev,
+            rightAnswers: prev.rightAnswers + 1,
+            wrongAnswers: prev.wrongAnswers - 1,
+          }));
+        }
       }
     },
-    [options, setScore],
+    [options, setScore, answerList],
   );
 
   const handleOptionClick = (optionValue, idx) => {
@@ -103,23 +164,23 @@ const QuestionBox = (props) => {
 
   const handleNextQuestion = useCallback(() => {
     if (next <= len - 1) {
-      checkAnswer(selectedAns);
-      setNext((n) => n + 1);
-      setSelectedAns("");
-      setFilteredOptions(options[0]);
-      setAudienceHelp(null);
-    }
-    setAnswerList((prev) => [
-      ...prev,
-      {
+      checkAnswer(selectedAns, next);
+      // Update the answer at the current index
+      const answerData = {
         question: question,
         options: options[0],
         id: `id${next}`,
         category: category,
         myAnswer: selectedAns,
         rightAnswer: options[1],
-      },
-    ]);
+      };
+      updateAnswerAtIndex(next, answerData);
+
+      setNext((n) => n + 1);
+      setSelectedAns("");
+      setFilteredOptions(options[0]);
+      setAudienceHelp(null);
+    }
   }, [
     next,
     len,
@@ -131,7 +192,7 @@ const QuestionBox = (props) => {
     checkAnswer,
     setFilteredOptions,
     setAudienceHelp,
-    setAnswerList,
+    updateAnswerAtIndex,
   ]);
 
   const handlePrevQuestion = useCallback(() => {

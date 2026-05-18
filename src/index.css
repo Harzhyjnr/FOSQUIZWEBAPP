@@ -2,9 +2,18 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #212832 !important;
@@ -26,9 +35,18 @@ body,
 }
 
 * {
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    sans-serif;
 }
 
 h1,
@@ -39,8 +57,13 @@ h5,
 h6 {
   font-weight: 700;
   letter-spacing: 0.5px;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 p,
@@ -50,15 +73,24 @@ button,
 input,
 select,
 textarea {
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    sans-serif;
 }
 
 /* Define styles for code blocks */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 /* Highlight for incorrect elements or responses */
@@ -85,7 +117,8 @@ code {
 
 /* Highlight for selected options */
 .optionSelected {
-  background-color: #3d1f463d !important;
+  background-color: #1b5c3d !important;
+  border-color: #28a745 !important;
 }
 
 /* Responsive design for smaller screens */
