@@ -11,15 +11,8 @@ const audio = new Audio(clickAudio);
 const QuestionBox = (props) => {
   const [selectedAns, setSelectedAns] = useState("");
   const context = useContext(quizContext);
-  const {
-    setScore,
-    next,
-    setNext,
-    len,
-    setAnswerList,
-    answerList,
-    updateAnswerAtIndex,
-  } = context;
+  const { setScore, next, setNext, len, answerList, updateAnswerAtIndex } =
+    context;
   const { question, options, category } = props;
   //Here options[0] = options array and options[1] = correct answer
   //let i = -1
@@ -42,7 +35,6 @@ const QuestionBox = (props) => {
           const optionsElements = document.querySelectorAll(".q-box_options");
           optionsElements.forEach((el) => {
             el.classList.remove("optionSelected");
-            const optionText = el.innerText.split("\n")[1]; // Get the text part without the letter
             if (el.innerText.includes(previousAnswer)) {
               el.classList.add("optionSelected");
             }

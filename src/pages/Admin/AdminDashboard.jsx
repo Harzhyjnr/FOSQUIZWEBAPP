@@ -3,9 +3,6 @@ import {
   Box,
   Heading,
   Button,
-  Input,
-  Select,
-  Textarea,
   VStack,
   HStack,
   Card,
@@ -73,8 +70,6 @@ const AdminDashboard = () => {
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const textColor = useColorModeValue("gray.900", "gray.50");
   const labelColor = useColorModeValue("gray.700", "gray.300");
-
-  const inputBg = useColorModeValue("white", "gray.700");
   const questionBg = useColorModeValue("gray.50", "gray.700");
   const headerBg = useColorModeValue("gray.100", "gray.700");
 
@@ -106,17 +101,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleOptionChange = (idx, val) => {
-    const arr = [...form.options];
-    arr[idx] = val;
-    setForm((prev) => ({ ...prev, options: arr }));
-  };
-
   const validateForm = () => {
     if (!form.department.trim()) {
       toast({
@@ -145,41 +129,6 @@ const AdminDashboard = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    const q = {
-      id: editingId || Date.now().toString(),
-      level: form.level,
-      department: form.department,
-      course: form.course,
-      question: form.question,
-      options: form.options,
-      correctAnswer: form.options[form.correctIndex],
-    };
-
-    if (editingId) {
-      updateQuestion(editingId, q);
-      toast({
-        title: "Question updated",
-        status: "success",
-        duration: 2000,
-      });
-    } else {
-      addQuestion(q);
-      toast({
-        title: "Question added",
-        status: "success",
-        duration: 2000,
-      });
-    }
-
-    loadQuestions();
-    setForm(empty);
-    setEditingId(null);
-  };
-
   const handleEdit = (q) => {
     setEditingId(q.id);
     setForm({
@@ -201,11 +150,6 @@ const AdminDashboard = () => {
       status: "info",
       duration: 2000,
     });
-  };
-
-  const handleCancel = () => {
-    setForm(empty);
-    setEditingId(null);
   };
 
   // CSV Upload Handler
