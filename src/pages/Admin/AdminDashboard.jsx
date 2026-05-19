@@ -40,7 +40,6 @@ import {
   addQuestion,
   getQuestions,
   deleteQuestion,
-  updateQuestion,
   getFeedbacks,
 } from "../../utils/storage";
 
@@ -54,9 +53,7 @@ const empty = {
 };
 
 const AdminDashboard = () => {
-  const [form, setForm] = useState(empty);
   const [list, setList] = useState([]);
-  const [editingId, setEditingId] = useState(null);
   const [users, setUsers] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
   const [activeTab, setActiveTab] = useState("questions");
@@ -101,47 +98,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const validateForm = () => {
-    if (!form.department.trim()) {
-      toast({
-        title: "Department is required",
-        status: "error",
-        duration: 3000,
-      });
-      return false;
-    }
-    if (!form.course.trim()) {
-      toast({ title: "Course is required", status: "error", duration: 3000 });
-      return false;
-    }
-    if (!form.question.trim()) {
-      toast({ title: "Question is required", status: "error", duration: 3000 });
-      return false;
-    }
-    if (form.options.some((opt) => !opt.trim())) {
-      toast({
-        title: "All options must be filled",
-        status: "error",
-        duration: 3000,
-      });
-      return false;
-    }
-    return true;
-  };
-
-  const handleEdit = (q) => {
-    setEditingId(q.id);
-    setForm({
-      level: q.level,
-      department: q.department,
-      course: q.course,
-      question: q.question,
-      options: q.options,
-      correctIndex: q.options.indexOf(q.correctAnswer),
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   const handleDelete = (id) => {
     deleteQuestion(id);
     loadQuestions();
@@ -150,6 +106,10 @@ const AdminDashboard = () => {
       status: "info",
       duration: 2000,
     });
+  };
+
+  const handleEdit = (q) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // CSV Upload Handler

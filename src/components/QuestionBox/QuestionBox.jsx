@@ -11,8 +11,7 @@ const audio = new Audio(clickAudio);
 const QuestionBox = (props) => {
   const [selectedAns, setSelectedAns] = useState("");
   const context = useContext(quizContext);
-  const { setScore, next, setNext, len, answerList, updateAnswerAtIndex } =
-    context;
+  const { setScore, next, setNext, len, answerList } = context;
   const { question, options, category } = props;
   //Here options[0] = options array and options[1] = correct answer
   //let i = -1
@@ -157,16 +156,6 @@ const QuestionBox = (props) => {
   const handleNextQuestion = useCallback(() => {
     if (next <= len - 1) {
       checkAnswer(selectedAns, next);
-      // Update the answer at the current index
-      const answerData = {
-        question: question,
-        options: options[0],
-        id: `id${next}`,
-        category: category,
-        myAnswer: selectedAns,
-        rightAnswer: options[1],
-      };
-      updateAnswerAtIndex(next, answerData);
 
       setNext((n) => n + 1);
       setSelectedAns("");
@@ -178,13 +167,10 @@ const QuestionBox = (props) => {
     len,
     selectedAns,
     options,
-    question,
-    category,
     setNext,
     checkAnswer,
     setFilteredOptions,
     setAudienceHelp,
-    updateAnswerAtIndex,
   ]);
 
   const handlePrevQuestion = useCallback(() => {
