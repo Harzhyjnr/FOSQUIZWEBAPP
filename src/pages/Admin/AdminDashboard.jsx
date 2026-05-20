@@ -43,15 +43,6 @@ import {
   getFeedbacks,
 } from "../../utils/storage";
 
-const empty = {
-  level: "100",
-  department: "",
-  course: "",
-  question: "",
-  options: ["", "", "", ""],
-  correctIndex: 0,
-};
-
 const AdminDashboard = () => {
   const [list, setList] = useState([]);
   const [users, setUsers] = useState([]);
