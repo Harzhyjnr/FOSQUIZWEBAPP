@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import "./QuestionBox.css";
 import { Badge } from "@chakra-ui/react";
 import quizContext from "../../context/quizContext";
@@ -11,7 +17,8 @@ const audio = new Audio(clickAudio);
 const QuestionBox = (props) => {
   const [selectedAns, setSelectedAns] = useState("");
   const context = useContext(quizContext);
-  const { setScore, next, setNext, len, answerList } = context;
+  const { setScore, next, setNext, len, answerList, updateAnswerAtIndex } =
+    context;
   const { question, options, category } = props;
   //Here options[0] = options array and options[1] = correct answer
   //let i = -1
@@ -40,8 +47,14 @@ const QuestionBox = (props) => {
           });
         }, 0);
       }
+    } else {
+      // Clear selected answer when moving to an unanswered question
+      setSelectedAns("");
     }
   }, [next, answerList]);
+
+  // Do NOT auto-save answer on every change
+  // Instead, save only when submitting (clicking Next/Previous)
 
   // --- Lifeline handlers ---
   const handleFiftyFifty = () => {
@@ -155,10 +168,19 @@ const QuestionBox = (props) => {
 
   const handleNextQuestion = useCallback(() => {
     if (next <= len - 1) {
+      // Check/score the answer FIRST (using the current/old answerList state)
       checkAnswer(selectedAns, next);
 
+      // Then save the answer after scoring
+      updateAnswerAtIndex(next, {
+        question,
+        options: options[0],
+        category,
+        myAnswer: selectedAns,
+        rightAnswer: options[1],
+      });
+
       setNext((n) => n + 1);
-      setSelectedAns("");
       setFilteredOptions(options[0]);
       setAudienceHelp(null);
     }
@@ -171,22 +193,52 @@ const QuestionBox = (props) => {
     checkAnswer,
     setFilteredOptions,
     setAudienceHelp,
+    question,
+    category,
+    updateAnswerAtIndex,
   ]);
 
   const handlePrevQuestion = useCallback(() => {
     if (next > 0) {
+      // Save current answer before moving to previous question
+      if (selectedAns) {
+        updateAnswerAtIndex(next, {
+          question,
+          options: options[0],
+          category,
+          myAnswer: selectedAns,
+          rightAnswer: options[1],
+        });
+      }
+
       setNext((n) => n - 1);
-      setSelectedAns("");
       setFilteredOptions(options[0]);
       setAudienceHelp(null);
     }
-  }, [next, options, setNext, setFilteredOptions, setAudienceHelp]);
+  }, [
+    next,
+    options,
+    setNext,
+    setFilteredOptions,
+    setAudienceHelp,
+    question,
+    category,
+    selectedAns,
+    updateAnswerAtIndex,
+  ]);
 
   // Overall quiz timer - counts down for the entire quiz
   const [timer, setTimer] = useState(() => {
     const savedTimer = localStorage.getItem("timer");
     return savedTimer ? parseInt(savedTimer) : 900; // Default to 15 minutes (900 seconds)
   });
+
+  // Use a ref to store the handleNextQuestion callback without causing timer effect to re-run
+  const handleNextQuestionRef = useRef(handleNextQuestion);
+
+  useEffect(() => {
+    handleNextQuestionRef.current = handleNextQuestion;
+  }, [handleNextQuestion]);
 
   useEffect(() => {
     const myInterval = setInterval(() => {
@@ -196,13 +248,13 @@ const QuestionBox = (props) => {
           return t - 1;
         } else {
           // Quiz time's up - end quiz
-          handleNextQuestion();
+          handleNextQuestionRef.current();
           return 0;
         }
       });
     }, 1000);
     return () => clearInterval(myInterval);
-  }, [handleNextQuestion]);
+  }, []);
 
   return (
     <>
