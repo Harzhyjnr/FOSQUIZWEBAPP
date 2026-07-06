@@ -37,11 +37,13 @@ import {
   CloseIcon,
 } from "@chakra-ui/icons";
 import {
-  addQuestion,
-  getQuestions,
-  deleteQuestion,
-  getFeedbacks,
-} from "../../utils/storage";
+  getAdminQuestions,
+  createAdminQuestion,
+  deleteAdminQuestion,
+  getAdminUsers,
+  toggleAdminUser,
+  getAdminFeedback,
+} from "../../utils/api";
 
 const AdminDashboard = () => {
   const [list, setList] = useState([]);
@@ -67,36 +69,74 @@ const AdminDashboard = () => {
     loadFeedbacks();
   }, []);
 
-  const loadQuestions = () => {
-    setList(getQuestions());
-  };
-
-  const loadUsers = () => {
+  const loadQuestions = async () => {
     try {
-      const usersData = JSON.parse(localStorage.getItem("users") || "[]");
-      setUsers(usersData);
-    } catch (e) {
-      setUsers([]);
+      const data = await getAdminQuestions();
+      setList(
+        data.questions.map((q) => ({
+          ...q,
+          id: q._id,
+        })),
+      );
+    } catch (error) {
+      toast({
+        title: "Failed to load questions",
+        description:
+          error?.data?.message || error.message || "Unable to fetch questions",
+        status: "error",
+        duration: 4000,
+      });
     }
   };
 
-  const loadFeedbacks = () => {
+  const loadUsers = async () => {
     try {
-      const feedbacksData = getFeedbacks();
-      setFeedbacks(feedbacksData);
-    } catch (e) {
-      setFeedbacks([]);
+      const data = await getAdminUsers();
+      setUsers(data.users || []);
+    } catch (error) {
+      toast({
+        title: "Failed to load users",
+        description:
+          error?.data?.message || error.message || "Unable to fetch users",
+        status: "error",
+        duration: 4000,
+      });
     }
   };
 
-  const handleDelete = (id) => {
-    deleteQuestion(id);
-    loadQuestions();
-    toast({
-      title: "Question deleted",
-      status: "info",
-      duration: 2000,
-    });
+  const loadFeedbacks = async () => {
+    try {
+      const data = await getAdminFeedback();
+      setFeedbacks(data.feedbacks || []);
+    } catch (error) {
+      toast({
+        title: "Failed to load feedback",
+        description:
+          error?.data?.message || error.message || "Unable to fetch feedback",
+        status: "error",
+        duration: 4000,
+      });
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteAdminQuestion(id);
+      await loadQuestions();
+      toast({
+        title: "Question deleted",
+        status: "info",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast({
+        title: "Delete failed",
+        description:
+          error?.data?.message || error.message || "Unable to delete question",
+        status: "error",
+        duration: 4000,
+      });
+    }
   };
 
   const handleEdit = (q) => {
@@ -212,17 +252,25 @@ const AdminDashboard = () => {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const text = event.target?.result;
         if (typeof text !== "string") throw new Error("Invalid file");
 
         const questions = parseCSV(text);
 
-        // Add all questions
-        questions.forEach((q) => addQuestion(q));
+        for (const q of questions) {
+          await createAdminQuestion({
+            level: q.level,
+            department: q.department,
+            course: q.course,
+            question: q.question,
+            options: q.options,
+            correctAnswer: q.correctAnswer,
+          });
+        }
 
-        loadQuestions();
+        await loadQuestions();
         toast({
           title: "Success!",
           description: `Imported ${questions.length} questions successfully`,
@@ -230,13 +278,13 @@ const AdminDashboard = () => {
           duration: 3000,
         });
 
-        // Reset file input
         if (e.target) e.target.value = "";
       } catch (error) {
         toast({
           title: "Import Error",
           description:
-            error instanceof Error ? error.message : "Failed to parse CSV",
+            error?.data?.message ||
+            (error instanceof Error ? error.message : "Failed to parse CSV"),
           status: "error",
           duration: 4000,
         });
@@ -246,20 +294,24 @@ const AdminDashboard = () => {
     reader.readAsText(file);
   };
 
-  const toggleAdmin = (userId) => {
-    const allUsers = JSON.parse(localStorage.getItem("users") || "[]");
-    const updated = allUsers.map((us) =>
-      us.id === userId ? { ...us, isAdmin: !us.isAdmin } : us,
-    );
-    localStorage.setItem("users", JSON.stringify(updated));
-    loadUsers();
-    toast({
-      title: updated.find((u) => u.id === userId).isAdmin
-        ? "Admin rights granted"
-        : "Admin rights revoked",
-      status: "success",
-      duration: 2000,
-    });
+  const toggleAdmin = async (userId) => {
+    try {
+      const data = await toggleAdminUser(userId);
+      await loadUsers();
+      toast({
+        title: data.message || "User role updated",
+        status: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast({
+        title: "Update failed",
+        description:
+          error?.data?.message || error.message || "Unable to update user role",
+        status: "error",
+        duration: 4000,
+      });
+    }
   };
 
   // Group questions by department + course for easier navigation
