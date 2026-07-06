@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAttempts } from "../../utils/storage";
+import { getProfile, getUserAttempts } from "../../utils/api";
 import {
   Box,
   Container,
@@ -24,7 +24,6 @@ const Profile = () => {
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Color values
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -32,22 +31,21 @@ const Profile = () => {
   const mutedText = useColorModeValue("gray.600", "gray.400");
 
   useEffect(() => {
-    try {
-      const userData = JSON.parse(localStorage.getItem("user"));
-      setUser(userData);
-      if (userData) {
-        const allAttempts = getAttempts();
-        const userAttempts =
-          allAttempts.filter((a) => a.userId === userData.id) || [];
-        setAttempts(
-          userAttempts.sort((a, b) => new Date(b.date) - new Date(a.date)),
-        );
+    const loadProfile = async () => {
+      setLoading(true);
+      try {
+        const profileResponse = await getProfile();
+        const attemptsResponse = await getUserAttempts();
+        setUser(profileResponse.user || null);
+        setAttempts(attemptsResponse.attempts || []);
+      } catch (error) {
+        console.error("Error loading profile:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error loading profile:", error);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    loadProfile();
   }, []);
 
   if (loading) {
@@ -112,7 +110,6 @@ const Profile = () => {
     >
       <Container maxW="6xl" px={{ base: 0, sm: 3, md: 4 }}>
         <VStack spacing={{ base: 3, sm: 4, md: 6 }} align="stretch">
-          {/* User Info Card */}
           <Box
             bg={cardBg}
             p={{ base: 4, md: 6 }}
@@ -142,7 +139,6 @@ const Profile = () => {
             </HStack>
           </Box>
 
-          {/* Stats Cards */}
           <SimpleGrid
             columns={{ base: 1, sm: 2, md: 4 }}
             spacing={{ base: 3, md: 4 }}
@@ -237,7 +233,6 @@ const Profile = () => {
             </Box>
           </SimpleGrid>
 
-          {/* Attempts Table */}
           <Box
             bg={cardBg}
             p={{ base: 4, md: 6 }}
@@ -258,133 +253,37 @@ const Profile = () => {
                   <Thead display={{ base: "none", md: "table-header-group" }}>
                     <Tr>
                       <Th color={mutedText}>Date</Th>
+                      <Th color={mutedText}>Score</Th>
                       <Th color={mutedText}>Course</Th>
-                      <Th isNumeric color={mutedText}>
-                        Correct
-                      </Th>
-                      <Th isNumeric color={mutedText}>
-                        Total
-                      </Th>
-                      <Th isNumeric color={mutedText}>
-                        Score
-                      </Th>
+                      <Th color={mutedText}>Department</Th>
+                      <Th color={mutedText}>Status</Th>
                     </Tr>
                   </Thead>
-                  <Tbody display={{ base: "block", md: "table-row-group" }}>
-                    {attempts.map((attempt) => {
-                      const score = (
-                        (attempt.correct / attempt.total) *
-                        100
-                      ).toFixed(2);
-                      return (
-                        <Tr
-                          key={attempt.id || attempt.date}
-                          display={{ base: "block", md: "table-row" }}
-                          mb={{ base: 4, md: 0 }}
-                          borderWidth={{ base: "1px", md: "0" }}
-                          borderColor={borderColor}
-                          p={{ base: 4, md: 0 }}
-                          borderRadius={{ base: "md", md: 0 }}
-                        >
-                          <Td
-                            color={textColor}
-                            display={{ base: "block", md: "table-cell" }}
-                            mb={{ base: 2, md: 0 }}
-                            before={{
-                              base: {
-                                content: '"Date: "',
-                                fontWeight: "bold",
-                                display: "block",
-                                mb: 1,
-                              },
-                              md: {},
-                            }}
-                            fontSize={{ base: "sm", md: "md" }}
+                  <Tbody>
+                    {attempts.map((attempt) => (
+                      <Tr key={attempt._id || attempt.id}>
+                        <Td>{new Date(attempt.date).toLocaleString()}</Td>
+                        <Td>
+                          {attempt.correct}/{attempt.total}
+                        </Td>
+                        <Td>{attempt.course || "General"}</Td>
+                        <Td>{attempt.department || "All"}</Td>
+                        <Td>
+                          <Badge
+                            colorScheme={
+                              attempt.correct / attempt.total >= 0.5
+                                ? "green"
+                                : "red"
+                            }
                           >
-                            {new Date(attempt.date).toLocaleString()}
-                          </Td>
-                          <Td
-                            color={textColor}
-                            display={{ base: "block", md: "table-cell" }}
-                            mb={{ base: 2, md: 0 }}
-                            before={{
-                              base: {
-                                content: '"Course: "',
-                                fontWeight: "bold",
-                                display: "block",
-                                mb: 1,
-                              },
-                              md: {},
-                            }}
-                            fontSize={{ base: "sm", md: "md" }}
-                          >
-                            {attempt.course || "General"}
-                          </Td>
-                          <Td
-                            isNumeric
-                            color="green.500"
-                            fontWeight="bold"
-                            display={{ base: "block", md: "table-cell" }}
-                            mb={{ base: 2, md: 0 }}
-                            before={{
-                              base: {
-                                content: '"Correct: "',
-                                fontWeight: "bold",
-                                display: "block",
-                                mb: 1,
-                              },
-                              md: {},
-                            }}
-                            fontSize={{ base: "sm", md: "md" }}
-                          >
-                            {attempt.correct}
-                          </Td>
-                          <Td
-                            isNumeric
-                            color={textColor}
-                            display={{ base: "block", md: "table-cell" }}
-                            mb={{ base: 2, md: 0 }}
-                            before={{
-                              base: {
-                                content: '"Total: "',
-                                fontWeight: "bold",
-                                display: "block",
-                                mb: 1,
-                              },
-                              md: {},
-                            }}
-                            fontSize={{ base: "sm", md: "md" }}
-                          >
-                            {attempt.total}
-                          </Td>
-                          <Td
-                            isNumeric
-                            display={{ base: "block", md: "table-cell" }}
-                            before={{
-                              base: {
-                                content: '"Score: "',
-                                fontWeight: "bold",
-                                display: "block",
-                                mb: 1,
-                              },
-                              md: {},
-                            }}
-                          >
-                            <Badge
-                              colorScheme={
-                                score >= 70
-                                  ? "green"
-                                  : score >= 50
-                                    ? "yellow"
-                                    : "red"
-                              }
-                            >
-                              {score}%
-                            </Badge>
-                          </Td>
-                        </Tr>
-                      );
-                    })}
+                            {((attempt.correct / attempt.total) * 100).toFixed(
+                              0,
+                            )}
+                            %
+                          </Badge>
+                        </Td>
+                      </Tr>
+                    ))}
                   </Tbody>
                 </Table>
               </Box>

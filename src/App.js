@@ -8,6 +8,8 @@ import ReviewAnswer from "./pages/Review/ReviewAnswer";
 import NotFound from "./pages/NotFound/NotFound";
 import Userlogin from "./pages/User Authentication/Userlogin";
 import UserSignup from "./pages/User Authentication/UserSignup";
+import ForgotPassword from "./pages/User Authentication/ForgotPassword";
+import ResetPassword from "./pages/User Authentication/ResetPassword";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import PublicRoute from "./components/Auth/PublicRoute";
 import AdminRoute from "./components/Auth/AdminRoute";
@@ -35,6 +37,8 @@ function App() {
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Userlogin />} />
             <Route path="/signup" element={<UserSignup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
 
           {/* Admin routes: with AdminLayout */}

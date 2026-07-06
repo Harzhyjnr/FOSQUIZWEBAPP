@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App";
 import { ChakraProvider, extendTheme, ColorModeScript } from "@chakra-ui/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { ensureDefaultAdmin, ensureSampleQuestions } from "./utils/storage";
 
 // Theme
 const colors = {
@@ -31,12 +30,6 @@ fontLink.href =
 fontLink.rel = "stylesheet";
 document.head.appendChild(fontLink);
 
-// Render
-// Ensure default admin account exists (email: admin@science.edu password: Admin@123)
-ensureDefaultAdmin();
-// Ensure there are a few sample questions for initial testing
-ensureSampleQuestions();
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
@@ -46,5 +39,5 @@ root.render(
         <App />
       </Router>
     </ChakraProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

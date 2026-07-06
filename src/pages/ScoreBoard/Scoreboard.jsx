@@ -6,7 +6,7 @@ import { BsShare } from "react-icons/bs";
 import quizContext from "../../context/quizContext";
 import { Link as ReachLink } from "react-router-dom";
 import ScoreRemark from "../../components/ScoreRemark/ScoreRemark";
-import { addAttempt } from "../../utils/storage";
+import { submitAttempt } from "../../utils/api";
 import { useToast } from "@chakra-ui/react";
 
 const Scoreboard = (props) => {
@@ -25,33 +25,34 @@ const Scoreboard = (props) => {
 
   // Save attempt on mount
   useEffect(() => {
-    try {
-      const user = JSON.parse(localStorage.getItem("user")) || null;
-      const attempt = {
-        id: Date.now().toString(),
-        userId: user ? user.id : null,
-        userName: user ? user.name : "Guest",
-        date: new Date().toISOString(),
-        total: total_que,
-        correct: correct_que,
-        wrong: wrong_que,
-        answers: answerList || [],
-        course: context.course !== "any" ? context.course : "General",
-        department: context.department !== "any" ? context.department : "All",
-      };
-      const saved = addAttempt(attempt);
-      if (saved) {
+    const saveAttempt = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user")) || null;
+        const attempt = {
+          userId: user ? user.id : null,
+          userName: user ? user.name : "Guest",
+          userEmail: user ? user.email : "",
+          date: new Date().toISOString(),
+          total: total_que,
+          correct: correct_que,
+          wrong: wrong_que,
+          answers: answerList || [],
+          course: context.course !== "any" ? context.course : "General",
+          department: context.department !== "any" ? context.department : "All",
+        };
+        await submitAttempt(attempt);
         toast({ title: "Attempt saved", status: "success", duration: 2000 });
-      } else {
+      } catch (e) {
+        console.error("Failed saving attempt", e);
         toast({
-          title: "Attempt already recorded",
-          status: "info",
+          title: "Failed to save attempt",
+          status: "error",
           duration: 2000,
         });
       }
-    } catch (e) {
-      console.error("Failed saving attempt", e);
-    }
+    };
+
+    saveAttempt();
   }, [
     total_que,
     correct_que,

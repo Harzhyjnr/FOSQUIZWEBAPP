@@ -7,8 +7,13 @@
   align-items: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 .auth-card {
@@ -41,8 +46,28 @@
   margin-bottom: 36px;
   text-align: center;
   letter-spacing: -0.5px;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+.auth-description {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.6;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 .auth-form {
@@ -63,19 +88,29 @@
   color: #1a1a1a;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 .form-input {
   /* padding: 16px 50px 16px 16px; */
-   padding: 13px 50px 13px 16px;
+  padding: 13px 50px 13px 16px;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   font-size: 15px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 500;
   background-color: #f8f9fa;
   color: #1a1a1a;
@@ -165,8 +200,13 @@
   color: #e74c3c;
   font-weight: 600;
   margin-top: -2px;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 .password-hint {
@@ -174,8 +214,13 @@
   color: #888;
   margin-top: -2px;
   display: block;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 .btn-primary {
@@ -192,8 +237,13 @@
   text-transform: uppercase;
   letter-spacing: 0.8px;
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -221,8 +271,13 @@
   animation: slideDown 0.3s ease-out;
   border-left: 4px solid;
   font-weight: 600;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 @keyframes slideDown {
@@ -260,8 +315,13 @@
   font-size: 14px;
   color: #666;
   margin: 0;
-  font-family: "Segoe UI", "Roboto", "Helvetica Neue", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 500;
 }
 
@@ -277,6 +337,22 @@
   color: #764ba2;
   text-decoration: none;
   transform: translateX(2px);
+}
+
+.forgot-password-link {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.success-text {
+  color: #1f6e2e;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: center;
+  font-size: 14px;
 }
 
 /* Responsive Design */

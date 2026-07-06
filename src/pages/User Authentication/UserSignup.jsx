@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./UserAuth.css";
+import { registerUser } from "../../utils/api";
 
 const UserSignup = () => {
   const navigate = useNavigate();
@@ -53,7 +54,6 @@ const UserSignup = () => {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -72,46 +72,24 @@ const UserSignup = () => {
     setLoading(true);
 
     try {
-      // Get existing users from localStorage
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-      // Check if user already exists
-      if (users.find((u) => u.email === formData.email)) {
-        setErrors({
-          general: "User with this email already exists. Please log in.",
-        });
-        setLoading(false);
-        return;
+      const response = await registerUser(formData);
+      if (response?.token && response?.user) {
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("user", JSON.stringify(response.user));
       }
-
-      // Create new user
-      const newUser = {
-        id: Date.now().toString(),
-        name: formData.name,
-        email: formData.email,
-        password: formData.password, // In production, this should be hashed
-        createdAt: new Date().toISOString(),
-      };
-
-      // Add user to localStorage
-      users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
-
-      // Set success message
-      setSuccessMessage(
-        "Account created successfully! Redirecting to login...",
-      );
-
-      // Reset form
+      setSuccessMessage("Account created successfully! Redirecting...");
       setFormData({ name: "", email: "", password: "", confirmPassword: "" });
       setErrors({});
-
-      // Redirect to login page after 2 seconds
       setTimeout(() => {
-        navigate("/login");
+        navigate("/");
       }, 2000);
     } catch (error) {
-      setErrors({ general: "Signup failed. Please try again." });
+      setErrors({
+        general:
+          error?.data?.message ||
+          error.message ||
+          "Signup failed. Please try again.",
+      });
     } finally {
       setLoading(false);
     }

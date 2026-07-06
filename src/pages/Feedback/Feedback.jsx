@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { addFeedback } from "../../utils/storage";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -19,6 +18,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { FiSend, FiCheckCircle } from "react-icons/fi";
+import { submitFeedback } from "../../utils/api";
 
 const Feedback = () => {
   const [text, setText] = useState("");
@@ -27,7 +27,6 @@ const Feedback = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // All hooks at the top level
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -36,7 +35,7 @@ const Feedback = () => {
   const tipsBg = useColorModeValue("blue.50", "blue.900");
   const pageTextColor = useColorModeValue("gray.900", "gray.50");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     if (!text.trim()) return setError("Please enter your feedback");
@@ -45,13 +44,10 @@ const Feedback = () => {
 
     try {
       const user = JSON.parse(localStorage.getItem("user")) || null;
-      addFeedback({
-        id: Date.now().toString(),
-        userId: user?.id || null,
+      await submitFeedback({
+        message: text.trim(),
         userName: user?.name || "Guest",
         userEmail: user?.email || "guest@example.com",
-        message: text.trim(),
-        date: new Date().toISOString(),
       });
       setText("");
       setSent(true);
@@ -77,7 +73,6 @@ const Feedback = () => {
     >
       <Container maxW="2xl" w="100%" px={4}>
         <VStack spacing={8} align="stretch">
-          {/* Header */}
           <VStack spacing={2} align="start" mb={4}>
             <Heading
               size="2xl"
@@ -92,7 +87,6 @@ const Feedback = () => {
             </Text>
           </VStack>
 
-          {/* Success Message */}
           {sent && (
             <Alert
               status="success"
@@ -115,7 +109,6 @@ const Feedback = () => {
             </Alert>
           )}
 
-          {/* Error Message */}
           {error && !sent && (
             <Alert status="error" borderRadius="lg">
               <AlertIcon />
@@ -123,7 +116,6 @@ const Feedback = () => {
             </Alert>
           )}
 
-          {/* Feedback Form */}
           {!sent && (
             <Box
               bg={cardBg}
@@ -201,7 +193,6 @@ const Feedback = () => {
             </Box>
           )}
 
-          {/* Tips Section */}
           {!sent && (
             <Box
               bg={tipsBg}
@@ -218,9 +209,6 @@ const Feedback = () => {
                 <Text>• Suggest features you'd like to see</Text>
                 <Text>
                   • Let us know about any bugs or issues you encountered
-                </Text>
-                <Text>
-                  • Your feedback helps us improve the app for everyone
                 </Text>
               </VStack>
             </Box>

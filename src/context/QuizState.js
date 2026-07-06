@@ -1,12 +1,11 @@
 import QuizContext from "./quizContext";
 import { useEffect, useState } from "react";
-import { getQuestions } from "../utils/storage";
+import { getQuestions as fetchQuestionsFromBackend } from "../utils/api";
 
 const QuizState = (props) => {
   const [questions, setQuestions] = useState([]);
   const [score, setScore] = useState({ rightAnswers: 0, wrongAnswers: 0 });
   const [next, setNext] = useState(0);
-  // const demoURL = 'https://opentdb.com/api.php?amount=4&category=&difficulty=&type=boolean'
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const len = questions.length;
@@ -20,14 +19,6 @@ const QuizState = (props) => {
   const [department, setDepartment] = useState("any");
   const [course, setCourse] = useState("any");
 
-  const fetchQuestions = async (api) => {
-    const response = await fetch(api);
-    const data = await response.json();
-    let results = data.results;
-    setQuestions(results);
-    setLoading(false);
-  };
-
   const updateAnswerAtIndex = (index, answerData) => {
     setAnswerList((prev) => {
       const newList = [...prev];
@@ -36,50 +27,47 @@ const QuizState = (props) => {
     });
   };
 
-  const setQuestionsFromStore = ({
+  const setQuestionsFromStore = async ({
     level = "any",
     department = "any",
     course = "any",
     count = 10,
   } = {}) => {
-    // Store the quiz parameters for later use (e.g., in attempts)
     setLevel(level);
     setDepartment(department);
     setCourse(course);
+    setLoading(true);
 
-    const all = getQuestions();
-    let filtered = all;
-    if (level && level !== "any")
-      filtered = filtered.filter((q) => String(q.level) === String(level));
-    if (department && department !== "any")
-      filtered = filtered.filter(
-        (q) =>
-          String(q.department).toLowerCase() ===
-          String(department).toLowerCase(),
-      );
-    if (course && course !== "any")
-      filtered = filtered.filter(
-        (q) => String(q.course).toLowerCase() === String(course).toLowerCase(),
-      );
-
-    // shuffle
-    for (let i = filtered.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+    try {
+      const response = await fetchQuestionsFromBackend({
+        level,
+        department,
+        course,
+        count,
+      });
+      setQuestions(response.questions || []);
+    } catch (error) {
+      console.error("Error fetching questions from backend:", error);
+      setQuestions([]);
+    } finally {
+      setLoading(false);
     }
-
-    const chosen = filtered.slice(0, count).map((q) => ({
-      category: `${q.department} - ${q.course}`,
-      question: q.question,
-      incorrect_answers: q.options.filter((o) => o !== q.correctAnswer),
-      correct_answer: q.correctAnswer,
-    }));
-    setQuestions(chosen);
-    setLoading(false);
   };
 
   useEffect(() => {
-    fetchQuestions(url);
+    const loadIfUrl = async () => {
+      if (!url) return;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        setQuestions(data.results || []);
+      } catch (error) {
+        console.error("Fetch questions error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadIfUrl();
   }, [url]);
 
   return (
@@ -93,7 +81,7 @@ const QuizState = (props) => {
         setQuestions,
         url,
         setUrl,
-        fetchQuestions,
+        fetchQuestions: fetchQuestionsFromBackend,
         setQuestionsFromStore,
         loading,
         setLoading,

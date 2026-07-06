@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./UserAuth.css";
+import { loginUser } from "../../utils/api";
 
 const Userlogin = () => {
   const navigate = useNavigate();
@@ -37,7 +38,6 @@ const Userlogin = () => {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -56,48 +56,25 @@ const Userlogin = () => {
     setLoading(true);
 
     try {
-      // Simulate API call - Replace with your actual backend authentication
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const user = users.find((u) => u.email === formData.email);
-
-      if (!user) {
-        setErrors({ general: "User not found. Please sign up first." });
-        setLoading(false);
-        return;
+      const response = await loginUser(formData);
+      if (response?.token && response?.user) {
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("user", JSON.stringify(response.user));
       }
-
-      if (user.password !== formData.password) {
-        setErrors({ general: "Incorrect password." });
-        setLoading(false);
-        return;
-      }
-
-      // Successful login - include isAdmin flag if present
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          isAdmin: user.isAdmin || false,
-        })
-      );
-
-      // Reset form
       setFormData({ email: "", password: "" });
       setErrors({});
-
-      // Show success alert
-      alert("Login successfully!");
-
-      // Redirect to admin dashboard if admin, otherwise home
-      if (user.isAdmin) {
+      if (response.user?.isAdmin) {
         navigate("/admin");
       } else {
         navigate("/");
       }
     } catch (error) {
-      setErrors({ general: "Login failed. Please try again." });
+      setErrors({
+        general:
+          error?.data?.message ||
+          error.message ||
+          "Login failed. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -167,6 +144,14 @@ const Userlogin = () => {
         </form>
 
         <div className="auth-footer">
+          <p>
+            <Link
+              to="/forgot-password"
+              className="auth-link forgot-password-link"
+            >
+              Forgot Password?
+            </Link>
+          </p>
           <p>
             Don't have an account?{" "}
             <Link to="/signup" className="auth-link">
