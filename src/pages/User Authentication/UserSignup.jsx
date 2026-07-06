@@ -84,11 +84,10 @@ const UserSignup = () => {
         navigate("/");
       }, 2000);
     } catch (error) {
+      console.error(error);
       setErrors({
         general:
-          error?.data?.message ||
-          error.message ||
-          "Signup failed. Please try again.",
+          error.response?.data?.message || "Signup failed. Please try again.",
       });
     } finally {
       setLoading(false);

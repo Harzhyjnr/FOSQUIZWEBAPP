@@ -69,9 +69,10 @@ const Userlogin = () => {
         navigate("/");
       }
     } catch (error) {
+      console.error(error);
       setErrors({
         general:
-          error?.data?.message ||
+          error.response?.data?.message ||
           error.message ||
           "Login failed. Please try again.",
       });

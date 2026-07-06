@@ -27,32 +27,36 @@ const QuizState = (props) => {
     });
   };
 
-  const setQuestionsFromStore = async ({
-    level = "any",
-    department = "any",
-    course = "any",
-    count = 10,
-  } = {}) => {
-    setLevel(level);
-    setDepartment(department);
-    setCourse(course);
-    setLoading(true);
+ const setQuestionsFromStore = async ({
+  level = "any",
+  department = "any",
+  course = "any",
+  count = 10,
+} = {}) => {
+  setLevel(level);
+  setDepartment(department);
+  setCourse(course);
+  setLoading(true);
 
-    try {
-      const response = await fetchQuestionsFromBackend({
-        level,
-        department,
-        course,
-        count,
-      });
-      setQuestions(response.questions || []);
-    } catch (error) {
-      console.error("Error fetching questions from backend:", error);
-      setQuestions([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const response = await fetchQuestionsFromBackend({
+      level,
+      department,
+      course,
+      count,
+    });
+
+    // Important: Make sure we get the questions array correctly
+    const questionsData = response.questions || response.data?.questions || [];
+
+    setQuestions(questionsData);
+  } catch (error) {
+    console.error("Error fetching questions from backend:", error);
+    setQuestions([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     const loadIfUrl = async () => {

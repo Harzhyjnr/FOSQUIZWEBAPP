@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getQuestions } from "../../utils/storage";
+import { getQuestions } from "../../utils/api"; // ← Import from api, not storage
 import "./Form.css";
 
 const Form = ({ onStart }) => {
+  const [loading, setLoading] = useState(true);
   const [questionsStore, setQuestionsStore] = useState([]);
   const [levels, setLevels] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [courses, setCourses] = useState([]);
   const [error, setError] = useState("");
+
   const [form, setForm] = useState({
     level: "any",
     department: "any",
@@ -15,99 +17,97 @@ const Form = ({ onStart }) => {
     count: 10,
   });
 
+  // Fetch questions from Backend
   useEffect(() => {
-    const q = getQuestions();
-    setQuestionsStore(q);
-    const lv = Array.from(new Set(q.map((x) => x.level))).sort();
-    const deps = Array.from(new Set(q.map((x) => x.department))).sort();
-    setLevels(lv);
-    setDepartments(deps);
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+        const response = await getQuestions(); // Calls backend /api/quiz/all
+        const questions = response.questions || [];
+
+        setQuestionsStore(questions);
+
+        const lv = Array.from(new Set(questions.map((x) => x.level))).sort();
+        const deps = Array.from(
+          new Set(questions.map((x) => x.department)),
+        ).sort();
+
+        setLevels(lv);
+        setDepartments(deps);
+      } catch (err) {
+        console.error("Failed to fetch questions:", err);
+        setError("Failed to load questions from server. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
   }, []);
 
+  // Filter departments and courses dynamically
   useEffect(() => {
-    // update departments and courses when level or department changes
-    let byLevel = questionsStore;
-    if (form.level !== "any")
-      byLevel = byLevel.filter((q) => String(q.level) === String(form.level));
+    let filtered = questionsStore;
 
-    // departments available for selected level
+    if (form.level !== "any") {
+      filtered = filtered.filter((q) => String(q.level) === String(form.level));
+    }
+
     const depsForLevel = Array.from(
-      new Set(byLevel.map((x) => x.department)),
+      new Set(filtered.map((x) => x.department)),
     ).sort();
     setDepartments(
-      form.level === "any"
-        ? Array.from(new Set(questionsStore.map((x) => x.department))).sort()
-        : depsForLevel,
+      depsForLevel.length
+        ? depsForLevel
+        : Array.from(new Set(questionsStore.map((x) => x.department))).sort(),
     );
 
-    let filtered = byLevel;
-    if (form.department !== "any")
-      filtered = filtered.filter(
+    let courseFiltered = filtered;
+    if (form.department !== "any") {
+      courseFiltered = courseFiltered.filter(
         (q) =>
           String(q.department).toLowerCase() ===
           String(form.department).toLowerCase(),
       );
-    const cs = Array.from(new Set(filtered.map((x) => x.course))).sort();
-    setCourses(cs);
+    }
 
-    // reset dependent selections if they are no longer valid
-    if (
-      form.department !== "any" &&
-      !(form.level === "any" ? questionsStore : byLevel).some(
-        (q) => q.department === form.department,
-      )
-    ) {
-      setForm((prev) => ({ ...prev, department: "any", course: "any" }));
-    }
-    if (form.course !== "any" && !cs.includes(form.course)) {
-      setForm((prev) => ({ ...prev, course: "any" }));
-    }
-  }, [form.level, form.department, form.course, questionsStore]);
+    const availableCourses = Array.from(
+      new Set(courseFiltered.map((x) => x.course)),
+    ).sort();
+    setCourses(availableCourses);
+  }, [form.level, form.department, questionsStore]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "count" && value !== "") {
-      const numericValue = Number(value);
-      if (numericValue < 10 || numericValue > 50) {
-        setError("You can only choose between 10 and 50 questions.");
-      } else {
-        setError("");
-      }
-      setForm((prev) => ({ ...prev, [name]: numericValue }));
-      return;
-    }
-
     setForm((prev) => ({ ...prev, [name]: value }));
+    setError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const questionCount = Number(form.count);
 
-    // Validate course selection
     if (form.course === "any") {
-      setError("Please select a course to proceed.");
+      setError("Please select a specific course to proceed.");
       return;
     }
 
-    if (
-      Number.isNaN(questionCount) ||
-      questionCount < 10 ||
-      questionCount > 50
-    ) {
-      setError("You may only choose between 10 and 50 questions.");
+    const count = Number(form.count);
+    if (count < 10 || count > 50) {
+      setError("Number of questions must be between 10 and 50.");
       return;
     }
 
-    setError("");
-    onStart &&
-      onStart({
-        level: form.level,
-        department: form.department,
-        course: form.course,
-        count: questionCount,
-      });
+    onStart({
+      level: form.level,
+      department: form.department,
+      course: form.course,
+      count: count,
+    });
   };
+
+  if (loading) {
+    return <div className="loading">Loading available courses...</div>;
+  }
 
   return (
     <form className="modern-form" onSubmit={handleSubmit}>
@@ -119,7 +119,7 @@ const Form = ({ onStart }) => {
           value={form.level}
           onChange={handleChange}
         >
-          <option value="any">Any</option>
+          <option value="any">Any Level</option>
           {levels.map((l) => (
             <option key={l} value={l}>
               {l} Level
@@ -136,7 +136,7 @@ const Form = ({ onStart }) => {
           value={form.department}
           onChange={handleChange}
         >
-          <option value="any">Any</option>
+          <option value="any">Any Department</option>
           {departments.map((d) => (
             <option key={d} value={d}>
               {d}
@@ -153,7 +153,7 @@ const Form = ({ onStart }) => {
           value={form.course}
           onChange={handleChange}
         >
-          <option value="any">Any</option>
+          <option value="any">Any Course</option>
           {courses.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -173,14 +173,11 @@ const Form = ({ onStart }) => {
           value={form.count}
           onChange={handleChange}
         />
-        {error && <div className="form-error">{error}</div>}
       </div>
 
-      <button
-        type="submit"
-        className="btn-submit"
-        disabled={Number(form.count) < 10 || Number(form.count) > 50}
-      >
+      {error && <div className="form-error">{error}</div>}
+
+      <button type="submit" className="btn-submit">
         Start Quiz
       </button>
     </form>
