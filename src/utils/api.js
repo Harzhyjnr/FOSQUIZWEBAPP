@@ -1,6 +1,6 @@
 // src/utils/api.js
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const API_BASE = (process.env.REACT_APP_API_URL || "/api").replace(/\/$/, "");
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
@@ -42,7 +42,11 @@ export const loginUser = (data) =>
   request("/auth/login", { method: "POST", body: data, auth: false });
 
 export const forgotPassword = (email) =>
-  request("/auth/forgot-password", { method: "POST", body: { email }, auth: false });
+  request("/auth/forgot-password", {
+    method: "POST",
+    body: { email },
+    auth: false,
+  });
 
 export const resetPassword = (data) =>
   request("/auth/reset-password", { method: "POST", body: data, auth: false });
